@@ -54,7 +54,8 @@ class Comment(models.Model):
     word_entry = models.ForeignKey(WordEntry, related_name='word_entry_comments') 
     content = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
-    
+    last_modified = models.DateTimeField(auto_now=True)
+    is_approved = models.BooleanField(default=False)        
     def __str__(self):
         if self.author:
             return self.author.get_full_name()
