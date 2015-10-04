@@ -15,7 +15,6 @@ class WordEntry(models.Model):
     phonetics = models.CharField(max_length=255, null=True, blank=True)
     meaning = models.TextField()
     curiosities = models.TextField(null=False, blank=True)
-    
     tags = models.ManyToManyField('Tag', related_name='tags')
     template = models.CharField(max_length=50, null=False,default='word-entry-default.html')
     access_count = models.BigIntegerField(default=0,null=False)
@@ -23,7 +22,7 @@ class WordEntry(models.Model):
     last_modified = models.DateTimeField(auto_now=True) 
                
     def __str__(self):
-        return self.word
+        return self.title + ' (url: /' + self.relative_url + ')' 
 
 class Picture(models.Model):
     description = models.CharField(max_length=155)    

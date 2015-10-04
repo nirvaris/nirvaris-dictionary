@@ -2,7 +2,13 @@ from django.contrib import admin
 
 from .models import WordEntry, MetaTag, Tag, Comment, Language, Picture
 
-admin.site.register(WordEntry)
+class WordEntryAdmin(admin.ModelAdmin):
+    list_filter = ('tags','author','template')
+    list_display = ('word','relative_url','title','short_description','meaning','scientific_name','curiosities','phonetics','audio_file','template','access_count','created')
+    search_fields = ['word','relative_url','title','short_description','meaning','scientific_name','curiosities']
+    
+admin.site.register(WordEntry, WordEntryAdmin)
+
 class MetaTagAdmin(admin.ModelAdmin):
     list_filter = ('word_entry','name','property','content')
     list_display = ('word_entry','name','property','content')
