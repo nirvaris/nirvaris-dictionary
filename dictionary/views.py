@@ -13,6 +13,7 @@ from django.views.generic.base import View
 from .forms import CommentForm, SearchForm
 from .models import WordEntry
 
+
 class SearchView(View):
 
     def post(self, request):
