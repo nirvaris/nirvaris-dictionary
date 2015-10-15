@@ -1,0 +1,13 @@
+{% if word_entries %}
+	[
+	{% for word_entry in word_entries %}
+		{% if forloop.counter ==  word_entries|length %}
+			{"word":"{{ word_entry.word }}", "relative_url":"{{ word_entry.relative_url }}"}
+		{% else %}
+			{"word":"{{ word_entry.word }}", "relative_url":"{{ word_entry.relative_url }}"},
+		{% endif %}
+	{% endfor %}
+	]
+{% else %}
+	[]
+{% endif %}

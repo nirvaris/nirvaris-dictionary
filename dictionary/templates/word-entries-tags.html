@@ -1,0 +1,23 @@
+{% extends "theme-base.html" %}
+{% load i18n %}
+{% load form_style %}
+
+{% block head_title %}{{ page.title }}{% endblock %}
+
+{% block search %}
+{% include 'header-home-search.html' %}
+{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="col-md-12">
+					{% for word_entry in word_entries %}
+						<p>{{ word_entry.word }}</p>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

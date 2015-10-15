@@ -1,27 +1,49 @@
-{% load form_script %}
-<head>
-{% if word_entry.meta_tags %}
-	{% for meta_tag in word_entry.meta_tags.all %}
-		<meta name="{{ meta_tag.name }}" property="{{ meta_tag.property }}" content="{{ meta_tag.content }}">
-	{% endfor %}
-{% endif %}
-</head>
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block head_title %}{{ page.title }}{% endblock %}
+
+{% block search %}
+{% include 'header-home-search.html' %}
+{% endblock %}
+
+{% block content %}
 	<div class="row">
 		<div class="col-md-12">
-			{{ word_entry.content|safe }}
+			
+			<div class="row">
+				<div class="col-md-12">
+					<h2 class="entry-word">{{ word_entry.word|safe }}</h2>
+					<p class="entry-short-description">{{ word_entry.short_description }}</p>
 
-			<form method="POST" >{% csrf_token %}
-				{{ form }}
-				<input type="submit" value="submit">
-			</form>
-
-			{% for comment in post.post_comments.all %}
-				{% if comment.is_approved %}
-			<p>{{ comment.author.get_full_name }}</p>
-				<p>{{ comment.content }}</p>
-				{% endif %}
-			{% endfor %}
-
+					<div class="row">
+						<div class="col-md-8">>
+							<p class="entry-"><strong>Também conhecido como: </strong></p>
+							<p class="entry-languages"><strong>Língua de origem: </strong>
+								{% for language in word_entry.languages.all %}
+								<span>{{ language.name }}</span>
+								{% endfor %}
+							</p>
+							<p class=""><strong>Nome científico: </strong>{{ word_entry.scientific_name }}</p>
+							<p class="entry-meaning">{{ word_entry.meaning|safe }}</p>
+							<p class="entry-curiosities">{{ word_entry.curiosities|safe }}</p>
+						</div>
+						<div class="col-md-4">
+						</div>
+					</div>
+					
+					<div class="entry-tags">
+						<p>Tags: 
+							{% for tag in word_entry.tags.all %}
+								<span>{{ tag.name }}</span>
+							{% endfor %}
+						</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
-{% form_script %}
+
+
+{% endblock %}
+

@@ -1,0 +1,22 @@
+{% if word_entries %}
+	{% for word_entry in word_entries %}
+		<div class="word-entry"><a href="#">{{ word_entry.word }}</a></div>
+	{% endfor %}
+{% else %}
+	<div class="word-entry">Nenhuma palavra encontrada</div>
+{% endif %}
+
+
+
+
+[
+ {
+  "word": "abacaxi"
+ },
+ {
+  "word": "atabaque"
+ },
+ {
+  "word": "xuiiu"
+ }
+]

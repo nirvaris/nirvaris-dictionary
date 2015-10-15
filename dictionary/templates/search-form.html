@@ -1,0 +1,17 @@
+<!-- #live-search -->
+<div id="live-search" ng-controller="SearchRequestCtrl">
+	<form id="searchform" class="clearfix" ng-submit="search()" >
+		{% csrf_token %}
+        <input type="text" ng-focus='onFocus()' ng-blur='onBlur()' ng-model="keyword" name="ipt-text">
+		<!--<input type="submit" value="Enviar">-->
+	</form>
+	<div class="search-result">
+		<ul>
+	    	<li class="search-result-item" ng-repeat="word in words">
+				<a href="{% verbatim %}{{ word.relative_url }}{% endverbatim %}"><span>{% verbatim %}{{ word.word }}{% endverbatim %}</span></a>
+	    	</li>
+	  	</ul>
+	</div>
+</div>
+
+<!-- onfocus="if (this.value == 'Digite alguma palavra') {this.value = '';}" onblur="if (this.value == '')  {this.value = 'Digite alguma palavra';}" value="Digite alguma palavra"  -->
