@@ -10,9 +10,34 @@ from django.template import RequestContext
 from django.views.generic.base import View
 # Create your views here.
 
-from .forms import CommentForm, SearchForm
+from .forms import CommentForm, SearchForm, UploadCSVForm
 from .models import WordEntry
 
+class UploadCSV(View):
+
+    def get(self, request):
+
+        form = UploadCSVForm()
+        request_context = RequestContext(request,{'upload_form':form})
+        return render_to_response('upload-csv-form.html', request_context)
+        
+    def post(self, request):
+
+        form = UploadCSVForm(request.POST, request.FILES)
+
+        if not form.is_valid():
+            request_context = RequestContext(request,{'upload_form':form})
+            return render_to_response('upload-csv-form.html', request_context)
+
+        f = request.FILES['file']
+        with open('upload/' + f.name , 'wb+') as destination:
+            for chunk in f.chunks():
+                destination.write(chunk)
+
+
+        form = UploadFileForm()
+        request_context = RequestContext(request,{'upload_form':form})
+        return render_to_response('upload-csv-form.html', request_context)
 
 class SearchView(View):
 

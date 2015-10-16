@@ -1,0 +1,30 @@
+
+{% load i18n %}
+{% load form_style %}
+{% load messages_style %}
+
+
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-3">
+		</div>
+		<div class="col-md-6">
+			<form method="POST" action="#">{% csrf_token %}
+				<h4>{% trans 'Drop us an email' %}</h4>
+				{{ messages|messages_style }}						
+				{{ upload_form|form_style }}
+				<div class="form-group">
+					{# Translators: The submit button on the comments form. #}
+					<input class="btn btn-primary btn-lg btn-block" type="submit" value="{% trans 'Send' %}" />
+				</div>
+			</form>
+		</div>
+		<div class="col-md-3">
+		</div>
+	</div>
+
+	
+{% endblock %}
+<!-- onfocus="if (this.value == 'Digite alguma palavra') {this.value = '';}" onblur="if (this.value == '')  {this.value = 'Digite alguma palavra';}" value="Digite alguma palavra"  -->
