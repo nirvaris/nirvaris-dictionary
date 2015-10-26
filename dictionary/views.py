@@ -1,23 +1,21 @@
-from django.shortcuts import render
-
-# Create your views here.
-
+import os
 import pdb
 
+from django.conf import settings
+from django.contrib import messages
 from django.db.models import Q
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from django.views.generic.base import View
 # Create your views here.
 
-from .csv_thing import import_csv
+from .csv_things import import_csv
 from .forms import CommentForm, SearchForm, UploadCSVForm
 from .models import WordEntry
 
 class UploadCSV(View):
 
     def get(self, request):
-
         form = UploadCSVForm()
         request_context = RequestContext(request,{'upload_form':form})
         return render_to_response('upload-csv-form.html', request_context)
@@ -31,14 +29,14 @@ class UploadCSV(View):
             return render_to_response('upload-csv-form.html', request_context)
 
         f = request.FILES['file']
-        file_path = 'upload/' + f.name
+        file_path = os.path.join(settings.BASE_DIR,'dictionary', 'upload') + '/' +request.user.username + '.' + f.name
         with open(file_path , 'wb+') as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
         
-        import_csv(file_path, messages)
+        import_csv(file_path, request.user)
         
-        form = UploadFileForm()
+        form = UploadCSVForm()
         request_context = RequestContext(request,{'upload_form':form})
         return render_to_response('upload-csv-form.html', request_context)
 

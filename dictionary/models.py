@@ -17,6 +17,7 @@ class WordEntry(models.Model):
     curiosities = models.TextField(null=False, blank=True)
     tags = models.ManyToManyField('Tag', related_name='tags')
     template = models.CharField(max_length=50, null=False,default='word-entry-default.html')
+    is_published = models.BooleanField(default=False)
     access_count = models.BigIntegerField(default=0,null=False)
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True) 
@@ -24,11 +25,16 @@ class WordEntry(models.Model):
     def __str__(self):
         return self.title + ' (url: /' + self.relative_url + ')' 
 
+class PortugueseTerm(models.Model):
+    name = models.CharField(max_length=255)
+    display_order = models.PositiveSmallIntegerField(default=0)
+    word_entry = models.ForeignKey('WordEntry')
+
+
 class Picture(models.Model):
     description = models.CharField(max_length=155)    
-    full_file_name = models.CharField(max_length=255, unique=True)
-    small_file_name = models.CharField(max_length=255, unique=True) 
-    tiny_file_name = models.CharField(max_length=255, unique=True)       
+    file_name = models.CharField(max_length=255, unique=True)
+    display_order = models.PositiveSmallIntegerField(default=0)
     word_entry = models.ForeignKey('WordEntry')
     
 class MetaTag(models.Model):
