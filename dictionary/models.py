@@ -9,6 +9,8 @@ class WordEntry(models.Model):
     title = models.CharField(max_length=70, null=False) 
     word = models.CharField(max_length=100, null=False)
     languages = models.ManyToManyField('Language', related_name='word_entries')
+    word_types = models.ManyToManyField('WordType', related_name='word_entries')
+    word_functions = models.ManyToManyField('WordFunction', related_name='word_entries')    
     short_description = models.CharField(max_length=155)
     scientific_name = models.CharField(max_length=255, null=True, blank=True)
     audio_file = models.CharField(max_length=255, null=True, blank=True)
@@ -24,6 +26,15 @@ class WordEntry(models.Model):
                
     def __str__(self):
         return self.title + ' (url: /' + self.relative_url + ')' 
+
+class WordType(models.Model):
+    name = models.CharField(max_length=255)
+    display_order = models.PositiveSmallIntegerField(default=0)    
+
+class WordFunction(models.Model):
+    name = models.CharField(max_length=255)
+    display_order = models.PositiveSmallIntegerField(default=0)
+
 
 class PortugueseTerm(models.Model):
     name = models.CharField(max_length=255)
@@ -68,6 +79,7 @@ class Comment(models.Model):
         
 class Language(models.Model):
     name = models.CharField(max_length=70)
+    location = models.CharField(max_length=70)
     def __str__(self):
         return self.name
    

@@ -61,12 +61,7 @@ class SearchView(View):
 
         request_context = RequestContext(request,{'word_entries':word_entries})
         return render_to_response('search-result.html', request_context)
-        
-    def get(self, request):
 
-        form = SearchForm()
-        request_context = RequestContext(request,{'search_form':form})
-        return render_to_response('search-form.html', request_context)        
 
 class WordEntryView(View):
     
