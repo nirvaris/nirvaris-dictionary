@@ -4,14 +4,26 @@ import pdb
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Q
+from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
+from django.utils.encoding import smart_str
 from django.views.generic.base import View
 # Create your views here.
 
 from .csv_things import import_csv
 from .forms import CommentForm, SearchForm, UploadCSVForm
 from .models import WordEntry
+
+class DownloadImportLog(View):
+    
+    def get(self, request):
+        log_file_path = request.session['log_file_path']
+        response = HttpResponse(mimetype='application/force-download')
+        response['Content-Disposition'] = 'attachment; filename=%s' % smart_str('import-log.log')
+        response['X-Sendfile'] = smart_str(log_file_path)
+
+        return response
 
 class UploadCSV(View):
 
@@ -34,10 +46,12 @@ class UploadCSV(View):
             for chunk in f.chunks():
                 destination.write(chunk)
         
-        import_csv(file_path, request.user)
+        log_file_path = import_csv(file_path, request.user)
+        
+        request.session['log_file_path'] = log_file_path
         
         form = UploadCSVForm()
-        request_context = RequestContext(request,{'upload_form':form})
+        request_context = RequestContext(request,{'upload_form':form,'log_link':'download_log'})
         return render_to_response('upload-csv-form.html', request_context)
 
 class SearchView(View):
