@@ -6,7 +6,6 @@ from django.db import models
 class WordEntry(models.Model):
     author = models.ForeignKey(User, related_name='word_entries') 
     relative_url = models.CharField(max_length=155, unique=True, null=False)
-    title = models.CharField(max_length=70, null=False) 
     word = models.CharField(max_length=100, null=False)
     languages = models.ManyToManyField('Language', related_name='word_entries')
     word_types = models.ManyToManyField('WordType', related_name='word_entries')
@@ -29,36 +28,43 @@ class WordEntry(models.Model):
 
 class WordType(models.Model):
     name = models.CharField(max_length=255)
-    display_order = models.PositiveSmallIntegerField(default=0)    
+    display_order = models.PositiveSmallIntegerField(default=0)
+    def __str__(self):
+        return self.name
 
 class WordFunction(models.Model):
     name = models.CharField(max_length=255)
     display_order = models.PositiveSmallIntegerField(default=0)
-
+    def __str__(self):
+        return self.name    
 
 class PortugueseTerm(models.Model):
     name = models.CharField(max_length=255)
     display_order = models.PositiveSmallIntegerField(default=0)
-    word_entry = models.ForeignKey('WordEntry')
-
+    word_entry = models.ForeignKey('WordEntry', related_name='portuguese_terms')
+    def __str__(self):
+        return self.name    
 
 class Picture(models.Model):
     description = models.CharField(max_length=155)    
     file_name = models.CharField(max_length=255, unique=True)
     display_order = models.PositiveSmallIntegerField(default=0)
-    word_entry = models.ForeignKey('WordEntry')
+    word_entry = models.ForeignKey('WordEntry', related_name='pictures')
+    def __str__(self):
+        return self.description + ' - ' + self.file_name
     
 class MetaTag(models.Model):
     name = models.CharField(max_length=70)
     property = models.CharField(max_length=70)
     content  = models.CharField(max_length=70)
-    word_entry = models.ForeignKey('WordEntry')
+    word_entry = models.ForeignKey('WordEntry', related_name='meta_tags')
 
     def __str__(self):
         return self.name
 
 class Tag(models.Model):
-    name = models.CharField(max_length=10, unique=True)
+    name = models.CharField(max_length=200, unique=True)
+    display = models.CharField(max_length=200, unique=False)
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 
@@ -82,4 +88,3 @@ class Language(models.Model):
     location = models.CharField(max_length=70)
     def __str__(self):
         return self.name
-   

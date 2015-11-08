@@ -1,0 +1,58 @@
+
+{% load i18n %}
+{% load form_style %}
+{% load messages_style %}
+
+
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-3">
+		</div>
+		<div class="col-md-6">
+			<form method="POST" action="#" enctype="multipart/form-data">{% csrf_token %}
+				<h4>{% trans 'Drop us an email' %}</h4>
+				{{ messages|messages_style }}						
+				{{ upload_form|form_style }}
+				<div class="form-group">
+					{# Translators: The submit button on the comments form. #}
+					<input class="btn btn-primary btn-lg btn-block" type="submit" value="{% trans 'Send' %}" />
+				</div>
+			</form>
+		</div>
+		{% if log_link %}
+		<a href="{% url 'download-log' %}">{% trans 'Download the log' %}</a>
+		{% endif %}
+		<div class="col-md-3">
+		</div>
+	</div>
+
+<h1>{% trans 'DOCUMENTATION'%}</h1>
+<p><b>{% trans 'Mapings'%}</b></p>
+<p>{% trans 'The field name must be at the header in the CSV, it does not matter which line or in which order or if there are other columns between them.'%}</p>
+<p>{% trans 'The importer is smart enough to find them. '%}</p>
+</br>
+ {% for key, value in mapped_fields.items %}
+ <li> {{ key }}: <b>{{ value }}</b></li>
+  {% endfor %}
+</br>
+	
+<h1>{% trans 'Possible errors list'%}</h1>
+</br>
+<p><b>{% trans '[ERROR CODE 1002] Header not found. All process was cancelled.'%}</b></p>
+<p>{% trans 'The CSV header was not found. It can happen if some column is missing or misspelled. They are case sensitive.'%}</p>
+</br>
+<p><b>{% trans '[ERROR CODE 1100] Invalid character for a tag name.'%}</b></p>
+<p>{% trans 'Invalid character found for a URL.'%}</p>
+</br>
+<p><b>{% trans '[ERROR CODE 9000] Unexpected error saving word entry.'%}</b></p>
+<p>{% trans 'The system could not read or interpret the information in one of the fields in the referred line. Check that line.'%}</p>
+</br>
+<p><b>{% trans '[ERROR CODE 9010] Unexpected error.'%}</b></p>
+<p>{% trans 'The system reported a strange behave. Please, report to support. It should NOT happen'%}</p>
+</br>
+
+
+{% endblock %}
+<!-- onfocus="if (this.value == 'Digite alguma palavra') {this.value = '';}" onblur="if (this.value == '')  {this.value = 'Digite alguma palavra';}" value="Digite alguma palavra"  -->
