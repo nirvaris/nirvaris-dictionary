@@ -15,18 +15,18 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Comment',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('id', models.AutoField(verbose_name='ID', serialize=False, primary_key=True, auto_created=True)),
                 ('content', models.TextField()),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('last_modified', models.DateTimeField(auto_now=True)),
                 ('is_approved', models.BooleanField(default=False)),
-                ('author', models.ForeignKey(related_name='word_entry_comments', null=True, to=settings.AUTH_USER_MODEL)),
+                ('author', models.ForeignKey(to=settings.AUTH_USER_MODEL, related_name='word_entry_comments', null=True)),
             ],
         ),
         migrations.CreateModel(
             name='Language',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('id', models.AutoField(verbose_name='ID', serialize=False, primary_key=True, auto_created=True)),
                 ('name', models.CharField(max_length=70)),
                 ('location', models.CharField(max_length=70)),
                 ('is_tribal', models.BooleanField(default=True)),
@@ -35,17 +35,17 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Picture',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('id', models.AutoField(verbose_name='ID', serialize=False, primary_key=True, auto_created=True)),
                 ('description', models.CharField(max_length=155)),
-                ('file_name', models.CharField(unique=True, max_length=255)),
+                ('file_name', models.CharField(max_length=255, unique=True)),
                 ('display_order', models.PositiveSmallIntegerField(default=0)),
             ],
         ),
         migrations.CreateModel(
             name='Tag',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
-                ('name', models.CharField(unique=True, max_length=200)),
+                ('id', models.AutoField(verbose_name='ID', serialize=False, primary_key=True, auto_created=True)),
+                ('name', models.CharField(max_length=200, unique=True)),
                 ('display', models.CharField(max_length=200)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('last_modified', models.DateTimeField(auto_now=True)),
@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='WordContent',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('id', models.AutoField(verbose_name='ID', serialize=False, primary_key=True, auto_created=True)),
                 ('short_description', models.CharField(max_length=155)),
                 ('content', models.TextField()),
                 ('created', models.DateTimeField(auto_now_add=True)),
@@ -65,11 +65,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='WordEntry',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
-                ('relative_url', models.CharField(unique=True, max_length=155)),
+                ('id', models.AutoField(verbose_name='ID', serialize=False, primary_key=True, auto_created=True)),
+                ('relative_url', models.CharField(max_length=155, unique=True)),
                 ('word', models.CharField(max_length=100)),
-                ('audio_file', models.CharField(blank=True, null=True, max_length=255)),
-                ('phonetics', models.CharField(blank=True, null=True, max_length=255)),
+                ('audio_file', models.CharField(max_length=255, null=True, blank=True)),
+                ('phonetics', models.CharField(max_length=255, null=True, blank=True)),
                 ('template', models.CharField(default='word-entry-default.html', max_length=50)),
                 ('is_published', models.BooleanField(default=False)),
                 ('access_count', models.BigIntegerField(default=0)),
@@ -84,15 +84,23 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='WordFunction',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('id', models.AutoField(verbose_name='ID', serialize=False, primary_key=True, auto_created=True)),
                 ('name', models.CharField(max_length=255)),
                 ('display_order', models.PositiveSmallIntegerField(default=0)),
             ],
         ),
         migrations.CreateModel(
+            name='WordPart',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, primary_key=True, auto_created=True)),
+                ('word_entry', models.ForeignKey(to='dictionary.WordEntry', related_name='word_has_parts')),
+                ('word_part', models.ForeignKey(to='dictionary.WordEntry', related_name='word_parts')),
+            ],
+        ),
+        migrations.CreateModel(
             name='WordRelated',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('id', models.AutoField(verbose_name='ID', serialize=False, primary_key=True, auto_created=True)),
                 ('word_entry', models.ForeignKey(to='dictionary.WordEntry', related_name='word_has_related')),
                 ('word_related', models.ForeignKey(to='dictionary.WordEntry', related_name='words_related')),
             ],
@@ -100,7 +108,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='WordType',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('id', models.AutoField(verbose_name='ID', serialize=False, primary_key=True, auto_created=True)),
                 ('name', models.CharField(max_length=255)),
                 ('display_order', models.PositiveSmallIntegerField(default=0)),
             ],

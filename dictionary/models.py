@@ -67,6 +67,10 @@ class WordEntry(models.Model):
     def __str__(self):
         return self.title + ' (url: /' + self.relative_url + ')' 
 
+class WordPart(models.Model):
+    word_entry = models.ForeignKey(WordEntry, related_name='word_has_parts')
+    word_part = models.ForeignKey(WordEntry, related_name='word_parts')
+    
 class WordRelated(models.Model):
     word_entry = models.ForeignKey(WordEntry, related_name='word_has_related')
     word_related = models.ForeignKey(WordEntry, related_name='words_related')    
