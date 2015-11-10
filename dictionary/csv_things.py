@@ -14,17 +14,20 @@ DICTIONARY_CSV_FIELDS = {
     'id': 'ID',
     'relative_url': 'URL',
     'word': 'PALAVRA',
-    'short_description': 'DESCRICAO CURTA',
     'languages': 'LINGUAS',
+    'short_description': 'DESCRICAO CURTA',
+    'word_parts':'COMPOSICAO',
+    'words_related':'PALAVRAS RELACIONADAS',
+    'types':'TIPO',
+    'word_functions':'FUNCAO GRAMATICAL'
     'audio_file': 'ARQUIVO DE AUDIO',
     'phonetics': 'FONETICA',
     'content': 'CONTEUDO',
     'pictures': 'IMAGENS',
     'pictures_description': 'IMAGENS DESCRICAO',
     'tags': 'TAGS',
-    'portuguese_terms':'TERMOS EM PORTUGUES',
-    'types':'TIPO',
-    'word_functions':'FUNCAO GRAMATICAL'    
+    'portuguese_terms':'TERMOS EM PORTUGUES'
+    
 }
 
 if hasattr(settings, 'DICTIONARY_CSV_FIELDS'):
@@ -237,12 +240,8 @@ def import_csv(request, file_path, user):
                         word_entry.author = user
                         word_entry.relative_url = row[header['relative_url']]
                         word_entry.word = row[header['word']]
-                        word_entry.short_description = row[header['short_description']]
-                        word_entry.scientific_name = row[header['scientific_name']]
                         word_entry.audio_file = row[header['audio_file']]
                         word_entry.phonetics = row[header['phonetics']]
-                        word_entry.meaning = row[header['meaning']]
-                        word_entry.curiosities = row[header['curiosities']]
                         word_entry.is_published = False
                         
                         word_entry.save()
@@ -309,20 +308,6 @@ def import_csv(request, file_path, user):
                                 #word_entry.portuguese_terms.add(port_term)
                             
                             word_entry.save()
-                        
-                        # FOR META-TAGS
-
-                        for mt_delete in word_entry.meta_tags.all():
-                            mt_delete.delete()
-                            
-                        meta_tag = MetaTag(word_entry=word_entry, name='description', property='description', content=row[header['short_description']])
-                        meta_tag.save()
-                        
-                        
-                        #if row[header['meta_tags']] != '':
-                        #    meta_tag = MetaTag(name='keywords', property='keywords', content=row[header['meta_tags']])
-                        #    meta_tag.save()
-                        #    word_entry.meta_tags.add(meta_tag)
                         
                         #pictures
                         #word_entry.pictures.clear()
