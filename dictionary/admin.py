@@ -1,20 +1,14 @@
 from django.contrib import admin
 
-from .models import WordEntry, MetaTag, Tag, Comment, Language, Picture, PortugueseTerm, WordFunction, WordType
+from .models import WordEntry, Tag, Comment, Language, Picture, WordFunction, WordType
 
-class WordEntryAdmin(admin.ModelAdmin):
-    list_filter = ('tags','author','template')
-    list_display = ('word','relative_url','short_description','meaning','scientific_name','curiosities','phonetics','audio_file','template','access_count','created')
-    search_fields = ['word','relative_url','short_description','meaning','scientific_name','curiosities']
-    
-admin.site.register(WordEntry, WordEntryAdmin)
 
-class MetaTagAdmin(admin.ModelAdmin):
-    list_filter = ('word_entry','name','property','content')
-    list_display = ('word_entry','name','property','content')
-    search_fields = ['name','property','content']
-    
-admin.site.register(MetaTag, MetaTagAdmin)
+#class WordEntryAdmin(admin.ModelAdmin):
+#    list_filter = ('tags','author','template')
+#    list_display = ('word','relative_url','short_description','meaning','scientific_name','curiosities','phonetics','audio_file','template','access_count','created')
+#    search_fields = ['word','relative_url','short_description','meaning','scientific_name','curiosities']
+  
+admin.site.register(WordEntry)
 
 
 class TagAdmin(admin.ModelAdmin):
@@ -33,6 +27,5 @@ class CommentAdmin(admin.ModelAdmin):
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Language)
 admin.site.register(Picture)
-admin.site.register(PortugueseTerm)
 admin.site.register(WordFunction)
 admin.site.register(WordType)

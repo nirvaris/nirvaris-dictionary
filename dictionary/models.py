@@ -3,65 +3,6 @@ from django.db import models
 
 # Create your models here.
 
-class WordEntry(models.Model):
-    author = models.ForeignKey(User, related_name='word_entries') 
-    relative_url = models.CharField(max_length=155, unique=True, null=False)
-    word = models.CharField(max_length=100, null=False)
-    languages = models.ManyToManyField('Language', related_name='word_entries')
-    word_types = models.ManyToManyField('WordType', related_name='word_entries')
-    word_functions = models.ManyToManyField('WordFunction', related_name='word_entries')    
-    short_description = models.CharField(max_length=155)
-    scientific_name = models.CharField(max_length=255, null=True, blank=True)
-    audio_file = models.CharField(max_length=255, null=True, blank=True)
-    phonetics = models.CharField(max_length=255, null=True, blank=True)
-    meaning = models.TextField()
-    curiosities = models.TextField(null=False, blank=True)
-    tags = models.ManyToManyField('Tag', related_name='tags')
-    template = models.CharField(max_length=50, null=False,default='word-entry-default.html')
-    is_published = models.BooleanField(default=False)
-    access_count = models.BigIntegerField(default=0,null=False)
-    created = models.DateTimeField(auto_now_add=True)
-    last_modified = models.DateTimeField(auto_now=True) 
-               
-    def __str__(self):
-        return self.title + ' (url: /' + self.relative_url + ')' 
-
-class WordType(models.Model):
-    name = models.CharField(max_length=255)
-    display_order = models.PositiveSmallIntegerField(default=0)
-    def __str__(self):
-        return self.name
-
-class WordFunction(models.Model):
-    name = models.CharField(max_length=255)
-    display_order = models.PositiveSmallIntegerField(default=0)
-    def __str__(self):
-        return self.name    
-
-class PortugueseTerm(models.Model):
-    name = models.CharField(max_length=255)
-    display_order = models.PositiveSmallIntegerField(default=0)
-    word_entry = models.ForeignKey('WordEntry', related_name='portuguese_terms')
-    def __str__(self):
-        return self.name    
-
-class Picture(models.Model):
-    description = models.CharField(max_length=155)    
-    file_name = models.CharField(max_length=255, unique=True)
-    display_order = models.PositiveSmallIntegerField(default=0)
-    word_entry = models.ForeignKey('WordEntry', related_name='pictures')
-    def __str__(self):
-        return self.description + ' - ' + self.file_name
-    
-class MetaTag(models.Model):
-    name = models.CharField(max_length=70)
-    property = models.CharField(max_length=70)
-    content  = models.CharField(max_length=70)
-    word_entry = models.ForeignKey('WordEntry', related_name='meta_tags')
-
-    def __str__(self):
-        return self.name
-
 class Tag(models.Model):
     name = models.CharField(max_length=200, unique=True)
     display = models.CharField(max_length=200, unique=False)
@@ -70,6 +11,65 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+
+class Language(models.Model):
+    name = models.CharField(max_length=70)
+    location = models.CharField(max_length=70)
+    is_tribal = models.BooleanField(default=True)
+    def __str__(self):
+        return self.name
+# WordType: sufix, prefix
+class WordType(models.Model):
+    name = models.CharField(max_length=255)
+    display_order = models.PositiveSmallIntegerField(default=0)
+    def __str__(self):
+        return self.name
+        
+# Grammar function, like verb, adjetive
+class WordFunction(models.Model):
+    name = models.CharField(max_length=255)
+    display_order = models.PositiveSmallIntegerField(default=0)
+    def __str__(self):
+        return self.name    
+        
+class WordContent(models.Model):
+    author = models.ForeignKey(User, related_name='word_entries_content') 
+    short_description = models.CharField(max_length=155)
+    content = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True) 
+
+class Picture(models.Model):
+    description = models.CharField(max_length=155)    
+    file_name = models.CharField(max_length=255, unique=True)
+    display_order = models.PositiveSmallIntegerField(default=0)
+    word_content = models.ForeignKey(WordContent, related_name='pictures')
+    def __str__(self):
+        return self.description + ' - ' + self.file_name
+
+class WordEntry(models.Model):
+    author = models.ForeignKey(User, related_name='word_entries') 
+    relative_url = models.CharField(max_length=155, unique=True, null=False)
+    word = models.CharField(max_length=100, null=False)
+    languages = models.ManyToManyField(Language, related_name='word_entries')
+    word_types = models.ManyToManyField(WordType, related_name='word_entries')
+    word_functions = models.ManyToManyField(WordFunction, related_name='word_entries')    
+    audio_file = models.CharField(max_length=255, null=True, blank=True)
+    phonetics = models.CharField(max_length=255, null=True, blank=True)
+    tags = models.ManyToManyField(Tag, related_name='tags')
+    template = models.CharField(max_length=50, null=False,default='word-entry-default.html')
+    is_published = models.BooleanField(default=False)
+    access_count = models.BigIntegerField(default=0,null=False)
+    word_content = models.ForeignKey(WordContent, related_name='word_entries') 
+    created = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True) 
+
+    def __str__(self):
+        return self.title + ' (url: /' + self.relative_url + ')' 
+
+class WordRelated(models.Model):
+    word_entry = models.ForeignKey(WordEntry, related_name='word_has_related')
+    word_related = models.ForeignKey(WordEntry, related_name='words_related')    
     
 class Comment(models.Model):
     author = models.ForeignKey(User, null=True, related_name='word_entry_comments') 
@@ -83,8 +83,3 @@ class Comment(models.Model):
             return self.author.get_full_name()
         return 'Anonymous'
         
-class Language(models.Model):
-    name = models.CharField(max_length=70)
-    location = models.CharField(max_length=70)
-    def __str__(self):
-        return self.name

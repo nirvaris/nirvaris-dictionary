@@ -57,6 +57,10 @@ class CSVImportException(Exception):
     def __str__(self):
         return repr(self.value)  
 
+
+def export_csv(request):
+    ...
+
 def import_language_csv(request, file_path):
     
     is_to_commit = True
@@ -168,8 +172,6 @@ def import_tag_csv(request, file_path):
                         
                 if not is_to_commit:
                     raise CSVImportException('[ERROR CODE 9000] Errors have happened. Transaction was canceled.')
-
-
 
     except CSVImportException as csv_excp:
         #pdb.set_trace()
