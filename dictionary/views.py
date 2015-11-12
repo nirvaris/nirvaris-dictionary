@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
+from django.views.generic import TemplateView
 from django.views.generic.base import View
 # Create your views here.
 
@@ -39,6 +40,10 @@ class UploadCSV(View):
         form = UploadCSVForm()
         request_context = RequestContext(request,{'upload_form':form})
         return render_to_response('upload-csv-form.html', request_context)
+
+
+class SearchFormTag(TemplateView):
+    template_name = "test-search-form-tag.html"
 
 class SearchView(View):
 
