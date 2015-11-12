@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import WordEntry, Tag, Comment, Language, Picture, WordFunction, WordType
+from .models import WordEntry, Tag, Comment, Language, Picture, WordFunction
 
 
 #class WordEntryAdmin(admin.ModelAdmin):
