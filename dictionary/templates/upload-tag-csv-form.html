@@ -35,45 +35,24 @@
 </br>
  {% for key, value in mapped_fields.items %}
  <li> {{ key }}: <b>{{ value }}</b></li>
- {% endfor %}
-
+  {% endfor %}
 </br>
 	
 <h1>{% trans 'Possible errors list'%}</h1>
-
-
-<p><b>{% trans '[ERROR CODE 1000] ID and relative_url does not match.'%}</b></p>
-<p>{% trans 'This error happened because a ID was informed in the CSV and was found in the database, however the URL in the database does not match with the URL informed in the CSV. If you want to change a URL, you have to do that inside the word entry manually.'%}</p>
-</br>
-<p><b>{% trans '[ERROR CODE 1001] ID not found. This line was ignored.'%}</b></p>
-<p>{% trans 'This error happened because a ID was informed in the CSV and was NOT found in the database. If this is a new entry, leave the ID field blank.'%}</p>
 </br>
 <p><b>{% trans '[ERROR CODE 1002] Header not found. All process was cancelled.'%}</b></p>
 <p>{% trans 'The CSV header was not found. It can happen if some column is missing or misspelled. They are case sensitive.'%}</p>
 </br>
-<p><b>{% trans '[ERROR CODE 1003] URL already exists.'%}</b></p>
-<p>{% trans 'Your are trying to add a new word entry wiht an URL that is already in use.'%}</p>
+<p><b>{% trans '[ERROR CODE 1100] Invalid character for a tag name.'%}</b></p>
+<p>{% trans 'Invalid character found for a URL.'%}</p>
 </br>
-
-<p><b>{% trans '[ERROR CODE 1004] TAGS cannot be empty.'%}</b></p>
-<p>{% trans 'The word must be at least in 1 tag'%}</p>
-</br>
-<p><b>{% trans '[ERROR CODE 1005] TAG does not exist.'%}</b></p>
-<p>{% trans 'The mentioned tag does not exist.'%}</p>
-</br>
-
-<p><b>{% trans '[ERROR CODE 1006] LANGUAGES cannot be empty.'%}</b></p>
-<p>{% trans 'The word must be at least in 1 language'%}</p>
-</br>
-<p><b>{% trans '[ERROR CODE 1007] LANGUAGE does not exist.'%}</b></p>
-<p>{% trans 'The mentioned language does not exist'%}</p>
-</br>
-
 <p><b>{% trans '[ERROR CODE 9000] Unexpected error saving word entry.'%}</b></p>
 <p>{% trans 'The system could not read or interpret the information in one of the fields in the referred line. Check that line.'%}</p>
 </br>
 <p><b>{% trans '[ERROR CODE 9010] Unexpected error.'%}</b></p>
 <p>{% trans 'The system reported a strange behave. Please, report to support. It should NOT happen'%}</p>
 </br>
+
+
 {% endblock %}
 <!-- onfocus="if (this.value == 'Digite alguma palavra') {this.value = '';}" onblur="if (this.value == '')  {this.value = 'Digite alguma palavra';}" value="Digite alguma palavra"  -->

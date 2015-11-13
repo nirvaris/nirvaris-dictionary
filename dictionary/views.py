@@ -4,21 +4,94 @@ import pdb
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Q
+from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
+
 from django.views.generic import TemplateView
+
+from django.utils.encoding import smart_str
+
 from django.views.generic.base import View
 # Create your views here.
 
-from .csv_things import import_csv
+from .csv_things import import_csv, import_tag_csv, import_language_csv, DICTIONARY_CSV_FIELDS, TAG_CSV_FIELDS, LANGUAGE_CSV_FIELDS
 from .forms import CommentForm, SearchForm, UploadCSVForm
 from .models import WordEntry
+
+class DownloadImportLog(View):
+    
+    def get(self, request):
+        log_file = open(request.session['log_file_path'])
+        #pdb.set_trace()
+        response = HttpResponse(log_file, content_type='application/octet-stream')
+        response['Content-Disposition'] = 'attachment; filename=%s' % smart_str('import-log.log.txt')
+
+        return response
+
+class UploadLanguageCSV(View):
+
+    def get(self, request):
+        form = UploadCSVForm()
+        request_context = RequestContext(request,{'upload_form':form, 'mapped_fields': LANGUAGE_CSV_FIELDS})
+        return render_to_response('upload-language-csv-form.html', request_context)
+        
+    def post(self, request):
+
+        form = UploadCSVForm(request.POST, request.FILES)
+
+        if not form.is_valid():
+            request_context = RequestContext(request,{'upload_form':form, 'mapped_fields': LANGUAGE_CSV_FIELDS})
+            return render_to_response('upload-language-csv-form.html', request_context)
+
+        f = request.FILES['file']
+        file_path = os.path.join(settings.BASE_DIR,'dictionary', 'upload') + '/' +request.user.username + '.' + f.name
+        with open(file_path , 'wb+') as destination:
+            for chunk in f.chunks():
+                destination.write(chunk)
+        
+        log_file_path = import_language_csv(request, file_path)
+        
+        request.session['log_file_path'] = log_file_path
+        
+        form = UploadCSVForm()
+        request_context = RequestContext(request,{'upload_form':form,'log_link':'download_log', 'mapped_fields': TAG_CSV_FIELDS})
+        return render_to_response('upload-language-csv-form.html', request_context)
+
+class UploadTagCSV(View):
+
+    def get(self, request):
+        form = UploadCSVForm()
+        request_context = RequestContext(request,{'upload_form':form, 'mapped_fields': TAG_CSV_FIELDS})
+        return render_to_response('upload-tag-csv-form.html', request_context)
+        
+    def post(self, request):
+
+        form = UploadCSVForm(request.POST, request.FILES)
+
+        if not form.is_valid():
+            request_context = RequestContext(request,{'upload_form':form, 'mapped_fields': TAG_CSV_FIELDS})
+            return render_to_response('upload-tag-csv-form.html', request_context)
+
+        f = request.FILES['file']
+        file_path = os.path.join(settings.BASE_DIR,'dictionary', 'upload') + '/' +request.user.username + '.' + f.name
+        with open(file_path , 'wb+') as destination:
+            for chunk in f.chunks():
+                destination.write(chunk)
+        
+        log_file_path = import_tag_csv(request, file_path)
+        
+        request.session['log_file_path'] = log_file_path
+        
+        form = UploadCSVForm()
+        request_context = RequestContext(request,{'upload_form':form,'log_link':'download_log', 'mapped_fields': TAG_CSV_FIELDS})
+        return render_to_response('upload-tag-csv-form.html', request_context)
 
 class UploadCSV(View):
 
     def get(self, request):
         form = UploadCSVForm()
-        request_context = RequestContext(request,{'upload_form':form})
+        request_context = RequestContext(request,{'upload_form':form, 'mapped_fields': DICTIONARY_CSV_FIELDS})
         return render_to_response('upload-csv-form.html', request_context)
         
     def post(self, request):
@@ -26,7 +99,7 @@ class UploadCSV(View):
         form = UploadCSVForm(request.POST, request.FILES)
 
         if not form.is_valid():
-            request_context = RequestContext(request,{'upload_form':form})
+            request_context = RequestContext(request,{'upload_form':form, 'mapped_fields': DICTIONARY_CSV_FIELDS})
             return render_to_response('upload-csv-form.html', request_context)
 
         f = request.FILES['file']
@@ -35,10 +108,12 @@ class UploadCSV(View):
             for chunk in f.chunks():
                 destination.write(chunk)
         
-        import_csv(file_path, request.user)
+        log_file_path = import_csv(request, file_path, request.user)
+        
+        request.session['log_file_path'] = log_file_path
         
         form = UploadCSVForm()
-        request_context = RequestContext(request,{'upload_form':form})
+        request_context = RequestContext(request,{'upload_form':form,'log_link':'download_log', 'mapped_fields': DICTIONARY_CSV_FIELDS})
         return render_to_response('upload-csv-form.html', request_context)
 
 
@@ -66,12 +141,7 @@ class SearchView(View):
 
         request_context = RequestContext(request,{'word_entries':word_entries})
         return render_to_response('search-result.html', request_context)
-        
-    def get(self, request):
 
-        form = SearchForm()
-        request_context = RequestContext(request,{'search_form':form})
-        return render_to_response('search-form.html', request_context)        
 
 class WordEntryView(View):
     
