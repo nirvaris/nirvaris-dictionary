@@ -13,29 +13,23 @@ class Tag(models.Model):
         return self.name
 
 class Language(models.Model):
-    name = models.CharField(max_length=70)
+    name = models.CharField(max_length=70, unique=True)
     location = models.CharField(max_length=70)
     is_tribal = models.BooleanField(default=True)
     def __str__(self):
         return self.name
-# WordType: sufix, prefix
-class WordType(models.Model):
-    name = models.CharField(max_length=255)
-    display_order = models.PositiveSmallIntegerField(default=0)
-    def __str__(self):
-        return self.name
-        
+
 # Grammar function, like verb, adjetive
 class WordFunction(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     display_order = models.PositiveSmallIntegerField(default=0)
     def __str__(self):
         return self.name    
         
 class WordContent(models.Model):
     author = models.ForeignKey(User, related_name='word_entries_content') 
-    short_description = models.CharField(max_length=155)
-    content = models.TextField()
+    short_description = models.CharField(max_length=155, unique=True)
+    content = models.TextField(unique=True)
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True) 
 
@@ -50,11 +44,10 @@ class Picture(models.Model):
 class WordEntry(models.Model):
     author = models.ForeignKey(User, related_name='word_entries') 
     relative_url = models.CharField(max_length=155, unique=True, null=False)
-    word = models.CharField(max_length=100, null=False)
+    word = models.CharField(max_length=100, null=False, unique=True)
     languages = models.ManyToManyField(Language, related_name='word_entries')
-    word_types = models.ManyToManyField(WordType, related_name='word_entries')
     word_functions = models.ManyToManyField(WordFunction, related_name='word_entries')    
-    audio_file = models.CharField(max_length=255, null=True, blank=True)
+    audio_file = models.CharField(max_length=255, null=True, blank=True, unique=True)
     phonetics = models.CharField(max_length=255, null=True, blank=True)
     tags = models.ManyToManyField(Tag, related_name='tags')
     template = models.CharField(max_length=50, null=False,default='word-entry-default.html')
@@ -67,10 +60,6 @@ class WordEntry(models.Model):
     def __str__(self):
         return self.title + ' (url: /' + self.relative_url + ')' 
 
-class WordPart(models.Model):
-    word_entry = models.ForeignKey(WordEntry, related_name='word_has_parts')
-    word_part = models.ForeignKey(WordEntry, related_name='word_parts')
-    
 class WordRelated(models.Model):
     word_entry = models.ForeignKey(WordEntry, related_name='word_has_related')
     word_related = models.ForeignKey(WordEntry, related_name='words_related')    
