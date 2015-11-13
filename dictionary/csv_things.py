@@ -1,6 +1,6 @@
 import csv, os, pdb, re, sys
 
-from chardet.universaldetector import UniversalDetector
+
 from datetime import datetime
 
 from django.conf import settings
