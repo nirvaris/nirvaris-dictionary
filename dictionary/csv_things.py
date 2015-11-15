@@ -8,7 +8,7 @@ from django.db import transaction
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 
-from .models import WordEntry, Tag, Language, Tag, Picture
+from .models import WordEntry, Tag, Language, Tag, Picture, WordContent, WordClass
 
 DICTIONARY_CSV_FIELDS = {
     'id': 'ID',
@@ -17,10 +17,10 @@ DICTIONARY_CSV_FIELDS = {
     'languages': 'LINGUAS',
     'short_description': 'DESCRICAO CURTA',
     'words_related':'PALAVRAS RELACIONADAS',
-    'word_functions':'FUNCAO GRAMATICAL',
+    'word_classes':'FUNCAO GRAMATICAL',
     'audio_file': 'ARQUIVO DE AUDIO',
     'phonetics': 'FONETICA',
-    'content_id': 'ID CONTEUDO',
+    'content_id': 'CONTEUDO ID',
     'content': 'CONTEUDO',
     'pictures': 'IMAGENS',
     'pictures_description': 'IMAGENS DESCRICAO',
@@ -75,8 +75,10 @@ def import_language_csv(request, file_path):
             line = 0
             _write_on_log(csv_log, line, _('looking for header'))
 
-            header = _find_header(csv_reader, LANGUAGE_CSV_FIELDS)
-            
+            header = _find_header(csv_log, csv_reader, LANGUAGE_CSV_FIELDS)
+            if not header:
+                raise CSVImportException(_('[ERROR CODE 1002] Header not found. All process was cancelled.'))
+
             _write_on_log(csv_log, header['line'], _('Header found'))
             with transaction.atomic():
                 for row in csv_reader:
@@ -84,6 +86,14 @@ def import_language_csv(request, file_path):
                     if line <= header['line']:
                         continue
                     try:
+
+                        row_empty = True
+                        for r in row:
+                            if r != '':
+                                row_empty = False
+                        if row_empty:
+                            _write_on_log(csv_log, line, _('[ROW EMPTY]'))
+                            continue
 
                         if Language.objects.filter(name__iexact=row[header['name']]).exists():
                             language = Language.objects.get(name__iexact=row[header['name']])
@@ -141,8 +151,10 @@ def import_tag_csv(request, file_path):
             line = 0
             _write_on_log(csv_log, line, _('looking for header'))
 
-            header = _find_header(csv_reader, TAG_CSV_FIELDS)
-            
+            header = _find_header(csv_log, csv_reader, TAG_CSV_FIELDS)
+            if not header:
+                raise CSVImportException(_('[ERROR CODE 1002] Header not found. All process was cancelled.'))
+                            
             _write_on_log(csv_log, header['line'], _('Header found'))
             with transaction.atomic():
                 for row in csv_reader:
@@ -150,7 +162,14 @@ def import_tag_csv(request, file_path):
                     if line <= header['line']:
                         continue
                     try:
-                        
+                        row_empty = True
+                        for r in row:
+                            if r != '':
+                                row_empty = False
+                        if row_empty:
+                            _write_on_log(csv_log, line, _('[ROW EMPTY]'))
+                            continue
+                                                    
                         name_lower = row[header['name']].lower()
                         if re.search(re.compile(regex),name_lower):
                             is_to_commit = False
@@ -209,8 +228,10 @@ def import_csv(request, file_path, user):
             line = 0
             _write_on_log(csv_log, line, _('looking for header'))
 
-            header = _find_header(csv_reader, DICTIONARY_CSV_FIELDS)
-            
+            header = _find_header(csv_log, csv_reader, DICTIONARY_CSV_FIELDS)
+            if not header:
+                raise CSVImportException(_('[ERROR CODE 1002] Header not found. All process was cancelled.'))
+                
             _write_on_log(csv_log, header['line'], _('Header found'))
             with transaction.atomic():
                 for row in csv_reader:
@@ -218,19 +239,24 @@ def import_csv(request, file_path, user):
                     if line <= header['line']:
                         continue
                     try:
-                        pdb.set_trace()
+                        row_empty = True
+                        for r in row:
+                            if r != '':
+                                row_empty = False
+                        if row_empty:
+                            _write_on_log(csv_log, line, _('[ROW EMPTY]'))
+                            continue
 
                         # FOR THE CONTENT
                         word_content = None
                         if row[header['content_id']].isdigit() and WordContent.objects.filter(id=row[header['content_id']]).exists(): 
-                            if row[header['short_description']].split()=='' or row[header['content']].split()=='':
-                                _write_on_log(csv_log, line, _('[ERROR CODE 1016] CONTENT ID was found but short description or content is blank.'))
+                            if row[header['content']].split()=='':
+                                _write_on_log(csv_log, line, _('[ERROR CODE 1016] CONTENT ID was found but content is blank.'))
                                 is_to_commit = False
                                 continue
 
                             word_content = WordContent.objects.get(id=row[header['content_id']])
                             word_content.author = user
-                            word_content.short_description = row[header['short_description']]
                             word_content.content = row[header['content']]
                             word_content.save()
 
@@ -239,10 +265,9 @@ def import_csv(request, file_path, user):
                                 _write_on_log(csv_log, line, _('[ERROR CODE 1015] CONTENT ID not found.'))
                                 is_to_commit = False
                                 continue
-                            if row[header['short_description']].split()!='' and row[header['content']].split()!='':
+                            if row[header['content']].split()!='':
                                 word_content = WordContent()
                                 word_content.author = user
-                                word_content.short_description = row[header['short_description']]
                                 word_content.content = row[header['content']]
                                 word_content.save()
 
@@ -277,36 +302,78 @@ def import_csv(request, file_path, user):
                                 _write_on_log(csv_log, line, _('[ERROR CODE 1003] URL already exists.'))
                                 is_to_commit = False
                                 continue                            
-                            word_entry = WordEntry() 
+                            word_entry = WordEntry()
 
                         word_entry.author = user
                         word_entry.relative_url = row[header['relative_url']]
                         word_entry.word = row[header['word']]
-                        word_entry.audio_file = row[header['audio_file']]
-                        word_entry.phonetics = row[header['phonetics']]
+                        
+                        if row[header['audio_file']] != '':
+                            word_entry.audio_file = row[header['audio_file']]
+                        
+                        if row[header['phonetics']] != '':
+                            word_entry.phonetics = row[header['phonetics']]
+                        
+                        word_entry.short_description = row[header['short_description']]
                         word_entry.is_published = False
-                        word_entry.content = word_content
+                        word_entry.word_content = word_content
                         word_entry.save()
 
                         # FOR TAGS
-                        if not _save_many_to_many_field(csv_log, line, word_entry, 'Tag', DICTIONARY_CSV_FIELDS['tags'], row[header['tags']]):
+                        if not _save_many_to_many_field(csv_log, line, word_entry.tags, Tag, DICTIONARY_CSV_FIELDS['tags'], row[header['tags']], False):
                             is_to_commit = False
                             continue
-                        
-                        # FOR LANGUAGES 
-                        if not _save_many_to_many_field(csv_log, line, word_entry, 'Language', DICTIONARY_CSV_FIELDS['languages'], row[header['languages']]):
-                            is_to_commit = False
-                            continue
+                        else:
+                            word_entry.save()
 
+                        # FOR LANGUAGES 
+                        if not _save_many_to_many_field(csv_log, line, word_entry.languages, Language, DICTIONARY_CSV_FIELDS['languages'], row[header['languages']], False):
+                            is_to_commit = False
                             continue
+                        else:
+                            word_entry.save()
+
+                        # FOR WORD CLASSES 
+                        if not _save_many_to_many_field(csv_log, line, word_entry.word_classes, WordClass, DICTIONARY_CSV_FIELDS['word_classes'], row[header['word_classes']], True):
+                            is_to_commit = False
+                            continue
+                        else:
+                            word_entry.save()
 
                         #pictures
+                        for pc_delete in word_content.pictures.all():
+                            pc_delete.delete()
+                            
+                        if row[header['pictures']] != '':
+                            pictures = row[header['pictures']].split(',')
+                            descriptions = None
+                            if row[header['pictures_description']] != '':
+                                descriptions = row[header['pictures_description']].split(',')
+                            desc_to_use=''
+
+                            nu_order = 0;
+                            for picture in pictures:
+                                if descriptions:
+                                    desc_to_use = descriptions[nu_order]
+                                pic = Picture(word_content=word_content,file_name=picture.strip(), description=desc_to_use, display_order=nu_order)
+                                pic.save()
+                                nu_order += 1;
+
+                            word_entry.save()
+
+                        #word related
+                        if not _save_words_related(csv_log, line, word_entry, row[header['words_related']]):
+                            is_to_commit = False
+                            continue
+                        else:
+                            word_entry.save()
 
                         word_saved += 1
 
                     except:
                         is_to_commit = False
                         _write_on_log(csv_log, line, _('[ERROR CODE 9000] Unexpected error saving word entry: message: ') + str(sys.exc_info()[1]))
+                
                 if not is_to_commit:
                     raise CSVImportException('[ERROR CODE 9000] Errors have happened. Transaction was canceled. No data was saved.')
 
@@ -317,22 +384,51 @@ def import_csv(request, file_path, user):
     except:
         is_to_commit = False
         _write_on_log(csv_log, line, _('[ERROR CODE 9010] Unexpected error: message: ') + str(sys.exc_info()[1]))        
-    
+
     #pdb.set_trace()
-    
+
     if is_to_commit:
         messages.success(request, _('File uploaded with success. Check the log for more details.'))
         _write_on_log(csv_log, line, _('[SUCCESS] The file was saved. Total of words saved: ' + str(word_saved)))
     else:
         messages.error(request, _('All process were canceled. File uploaded with ERRORS. Check the log for more details.'))
 
-        
+
     os.remove(file_path)
     csv_log.close()
     return log_file_path
 
-def _save_many_to_many_field(csv_log, line, word_entry, fieldClassName,header, field_csv_value, can_be_empty):
+def _save_words_related(csv_log, line, word_entry,  field_csv_value):
 
+    
+    field_csv_value = field_csv_value.strip()
+    
+    if field_csv_value == '':
+        return True
+
+    field_values = field_csv_value.split(',')
+    
+    word_entry.words_related.clear()
+    field_value_not_exists = False
+    
+    for field_value in field_values:
+        
+        field_value = field_value.strip().lower()
+        
+        if not WordEntry.objects.filter(relative_url__iexact=field_value).exists():
+            _write_on_log(csv_log, line, _('[ERROR CODE 1009] relative_url does not exist: ' + field_value))
+            field_value_not_exists = True
+        else:
+            word_entry.words_related.add(WordEntry.objects.get(relative_url__iexact=field_value))
+    
+    if field_value_not_exists:
+        return False
+
+    return True
+
+def _save_many_to_many_field(csv_log, line, word_entry_list, fieldClass,header, field_csv_value, can_be_empty):
+
+    
     field_csv_value = field_csv_value.strip()
     
     if field_csv_value == '':
@@ -343,10 +439,8 @@ def _save_many_to_many_field(csv_log, line, word_entry, fieldClassName,header, f
             return False
 
     field_values = field_csv_value.split(',')
-
-    word_entry.tags.clear()
-    fieldClass = getattr(models, fieldClassName)
     
+    word_entry_list.clear()
     field_value_not_exists = False
     
     for field_value in field_values:
@@ -357,38 +451,47 @@ def _save_many_to_many_field(csv_log, line, word_entry, fieldClassName,header, f
             _write_on_log(csv_log, line, _('[ERROR CODE 1009] ' + header + ' does not exist: ' + field_value))
             field_value_not_exists = True
         else:
-            word_entry.word_types.add(fieldClass.objects.get(name__iexact=field_value))
+            word_entry_list.add(fieldClass.objects.get(name__iexact=field_value))
     
     if field_value_not_exists:
         return False
 
-    word_entry.save() 
     return True
 
-def _find_header(csv_reader, CSV_FIELDS):
+def _find_header(csv_log, csv_reader, CSV_FIELDS):
     
     header = {}
     try:
         line = 0
         #pdb.set_trace()
         for row in csv_reader:
+            
+            header_log = ''
+            found_some_header = False
             header_found = True
             for key, column in CSV_FIELDS.items():
                 if not column in row:
                     header_found = False
-                    break
-                header[key] = row.index(column)
-            if header_found:
-                break
+                    header_log += ' ' + column
+                else:
+                    found_some_header = True
+                    header[key] = row.index(column)
             
+            if found_some_header:
+                break
             line += 1
+            
         if not header_found:
-            raise CSVImportException(_('[ERROR CODE 1002] Header not found. All process was cancelled.'))
+            _write_on_log(csv_log, line, _('[ERROR CODE 1002] Header not found: ' + header_log.strip()))
     except:
-        raise CSVImportException(_('[ERROR CODE 1002] Header not found. All process was cancelled.'))
-        
-    header['line'] = line
-    return header
+        header_found = False
+        _write_on_log(csv_log, line,_('[ERROR CODE 1002] Header not found. All process was cancelled.'))
+    
+    if not header_found:
+        return None
+    else:
+        header['line'] = line
+        return header
 
 def _write_on_log(csv_log, line, msg):
     #pdb.set_trace()
