@@ -60,8 +60,11 @@
 nirvarisControllers.controller('SearchRequestCtrl', ['$scope', '$http', function ($scope, $http, $sce) {
 	$scope.keyword = '';
 	$scope.results = [];
+	$scope.hideSearchResult = true;
+	
+	// only for debug
 	//$scope.words = [{"word":"sample abacate", "relative_url":"abacate"}, {"word":"sample xaxin", "relative_url":"xaxin"}];
-	$scope.hideSearchResult = false;
+	//$scope.hideSearchResult = false;
 	
 	$scope.onFocus = function(){
 		console.log('focus');
@@ -86,6 +89,7 @@ nirvarisControllers.controller('SearchRequestCtrl', ['$scope', '$http', function
 			// this callback will be called asynchronously
 			// when the response is available
 			$scope.words = response.data; 
+			$scope.hideSearchResult = false;
 		}, function(response) {
 			// called asynchronously if an error occurs
 			// or server returns response with an error status.

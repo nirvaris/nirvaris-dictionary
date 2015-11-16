@@ -145,7 +145,7 @@ class SearchView(View):
             for keyword in keywords:
                 q_obj &= Q(word__icontains=keyword) | Q(short_description__icontains=keyword) | Q(word_content__content__icontains=keyword)
             
-            pdb.set_trace()
+            #pdb.set_trace()
             word_entries = WordEntry.objects.filter(q_obj)
 
         request_context = RequestContext(request,{'word_entries':word_entries})
