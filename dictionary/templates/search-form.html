@@ -78,7 +78,7 @@ nirvarisControllers.controller('SearchRequestCtrl', ['$scope', '$http', function
 		);*/
 		
 		
-		$http.post('/dictionary/search', $.param({ 
+		$http.post('/search', $.param({ 
 			search_input: $scope.keyword,
 			csrfmiddlewaretoken: angular.element(document.getElementsByName('csrfmiddlewaretoken')[0]).val() 
 		}), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).
