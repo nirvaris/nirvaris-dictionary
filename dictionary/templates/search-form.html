@@ -1,18 +1,57 @@
-<!-- #live-search -->
-<div id="live-search" ng-controller="SearchRequestCtrl">
-	<form id="searchform" class="clearfix" ng-submit="search()" >
-		{% csrf_token %}
-        <input type="text" ng-focus='onFocus()' ng-blur='onBlur()' ng-model="keyword" name="ipt-text">
-		<!--<input type="submit" value="Enviar">-->
-	</form>
-	<div class="search-result">
-		<ul>
-	    	<li class="search-result-item" ng-repeat="word in words">
-				<a href="{% verbatim %}{{ word.relative_url }}{% endverbatim %}"><span>{% verbatim %}{{ word.word }}{% endverbatim %}</span></a>
-	    	</li>
-	  	</ul>
+<div>
+	<!-- live-search -->
+	<div class="dictionary-live-search" ng-controller="SearchRequestCtrl">
+		<form id="searchform" class="clearfix" ng-submit="search()" >
+			{% csrf_token %}
+			<div class="form-group">
+				<input type="text" name="ipt-text" class="form-control" placeholder="Digite alguma palavra" ng-focus='onFocus()' ng-blur='onBlur()' ng-model="keyword">
+			</div>
+		</form>
+		<div class="search-result ng-hide" ng-hide="hideSearchResult">
+			<ul>
+				<li class="search-result-item" ng-repeat="word in words">
+					<a href="{% verbatim %}{{ word.relative_url }}{% endverbatim %}"><span>{% verbatim %}{{ word.word }}{% endverbatim %}</span></a>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<!-- alphabetical-search -->
+	<div class="dictionary-alphabetical-search">
+		<div class="dictionary-alphabetical-search-wrap">
+			<ul class="dictionary-alphabetical-search-list">
+				<li><a href="/a">A</a></li>
+				<li><a href="/b">B</a></li>
+				<li><a href="/c">C</a></li>
+				<li><a href="/d">D</a></li>
+				<li><a href="/e">E</a></li>
+				<li><a href="/f">F</a></li>
+				<li><a href="/g">G</a></li>
+				<li><a href="/h">H</a></li>
+				<li><a href="/i">I</a></li>
+				<li><a href="/j">J</a></li>
+				<li><a href="/k">K</a></li>
+				<li><a href="/l">L</a></li>
+				<li><a href="/m">M</a></li>
+				<li><a href="/n">N</a></li>
+				<li><a href="/o">O</a></li>
+				<li><a href="/p">P</a></li>
+				<li><a href="/q">Q</a></li>
+				<li><a href="/r">R</a></li>
+				<li><a href="/s">S</a></li>
+				<li><a href="/t">T</a></li>
+				<li><a href="/u">U</a></li>
+				<li><a href="/v">V</a></li>
+				<li><a href="/w">W</a></li>
+				<li><a href="/x">X</a></li>
+				<li><a href="/y">Y</a></li>
+				<li><a href="/z/">Z</a></li>
+			</ul>
+		</div>
 	</div>
 </div>
+
+
 
 <!-- onfocus="if (this.value == 'Digite alguma palavra') {this.value = '';}" onblur="if (this.value == '')  {this.value = 'Digite alguma palavra';}" value="Digite alguma palavra"  -->
 
@@ -21,6 +60,8 @@
 nirvarisControllers.controller('SearchRequestCtrl', ['$scope', '$http', function ($scope, $http, $sce) {
 	$scope.keyword = '';
 	$scope.results = [];
+	$scope.words = [{"word":"sample abacate", "relative_url":"abacate"}, {"word":"sample xaxin", "relative_url":"xaxin"}];
+	$scope.hideSearchResult = false;
 	
 	$scope.onFocus = function(){
 		console.log('focus');
