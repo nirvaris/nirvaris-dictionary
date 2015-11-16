@@ -1,20 +1,22 @@
 {% extends "theme-base.html" %}
+{% load staticfiles %}
 {% load i18n %}
 
 {% block head_title %}{{ word_entry.title }}{% endblock %}
 
-{% block search %}
-{% include 'header-home-search.html' %}
-{% endblock %}
+<p><b>PALAVRA</b></p>
+<p>{{ word_entry.word }}</p>
 
-{% block content %}
-	<div class="row">
-		<div class="col-md-12">
-			
-			<div class="row">
-				<div class="col-md-12">
-					<h2 class="entry-word">{{ word_entry.word|safe }}</h2>
-					<p class="entry-short-description">{{ word_entry.short_description }}</p>
+
+<p><b>Descrição:</b></p>
+<p>{{ word_entry.short_description }}</p>
+<p>Audio: {{ word_entry.audio_file }}</p>
+<p>Phonetics: {{ word_entry.phonetics }}</p>
+
+<p><b>Linguagens</b></p>
+{% for language in word_entry.languages.all %}
+	 <p>{{ language.name }}</p>
+{% endfor %}
 
 					<div class="row">
 						<div class="col-md-8">
@@ -43,7 +45,21 @@
 			</div>
 		</div>
 	</div>
+	
+<p><b>Classes</b></p>
+{% for word_class in word_entry.word_classes.all %}
+	 <p>{{ word_class.name }}</p>
+{% endfor %}
 
+<p><b>Tags</b></p>
+{% for tag in word_entry.tags.all %}
+	 <p>{{ tag.display }}</p>
+{% endfor %}
 
-{% endblock %}
+<p><b>Palavras relacionadas</b></p>
+{% for word_related in word_entry.words_related.all %}
+	 <p><a href="{{ word_related.relative_url }}">{{ word_related.word }}</a></p>
+{% endfor %}
 
+<p><b>Conteúdo</b></p>
+{{ word_entry.word_content }}

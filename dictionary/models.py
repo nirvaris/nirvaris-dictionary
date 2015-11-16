@@ -20,7 +20,7 @@ class Language(models.Model):
         return self.name
 
 # Grammar function, like verb, adjetive
-class WordFunction(models.Model):
+class WordClass(models.Model):
     name = models.CharField(max_length=255, unique=True)
     display_order = models.PositiveSmallIntegerField(default=0)
     def __str__(self):
@@ -28,10 +28,11 @@ class WordFunction(models.Model):
         
 class WordContent(models.Model):
     author = models.ForeignKey(User, related_name='word_entries_content') 
-    short_description = models.CharField(max_length=155, unique=True)
-    content = models.TextField(unique=True)
+    content = models.TextField(blank=False)
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True) 
+    def __str__(self):
+        return self.content
 
 class Picture(models.Model):
     description = models.CharField(max_length=155)    
@@ -42,27 +43,26 @@ class Picture(models.Model):
         return self.description + ' - ' + self.file_name
 
 class WordEntry(models.Model):
-    author = models.ForeignKey(User, related_name='word_entries') 
+    author = models.ForeignKey(User, related_name='word_entries')
     relative_url = models.CharField(max_length=155, unique=True, null=False)
     word = models.CharField(max_length=100, null=False, unique=True)
+    short_description = models.CharField(max_length=155, unique=True, null=False)
     languages = models.ManyToManyField(Language, related_name='word_entries')
-    word_functions = models.ManyToManyField(WordFunction, related_name='word_entries')    
-    audio_file = models.CharField(max_length=255, null=True, blank=True, unique=True)
+    word_classes = models.ManyToManyField(WordClass, related_name='word_entries')
+    audio_file = models.CharField(max_length=255, null=True, blank=True)
     phonetics = models.CharField(max_length=255, null=True, blank=True)
     tags = models.ManyToManyField(Tag, related_name='tags')
-    template = models.CharField(max_length=50, null=False,default='word-entry-default.html')
+    template = models.CharField(max_length=50, null=False, default='word-entry-default.html')
     is_published = models.BooleanField(default=False)
-    access_count = models.BigIntegerField(default=0,null=False)
-    word_content = models.ForeignKey(WordContent, related_name='word_entries') 
+    access_count = models.BigIntegerField(default=0, null=False)
+    word_content = models.ForeignKey(WordContent, related_name='word_entries',null=False) 
+    words_related = models.ManyToManyField('WordEntry', related_name='word_related_to')
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True) 
 
     def __str__(self):
-        return self.title + ' (url: /' + self.relative_url + ')' 
+        return self.word + ' (url: /' + self.relative_url + ')' 
 
-class WordRelated(models.Model):
-    word_entry = models.ForeignKey(WordEntry, related_name='word_has_related')
-    word_related = models.ForeignKey(WordEntry, related_name='words_related')    
     
 class Comment(models.Model):
     author = models.ForeignKey(User, null=True, related_name='word_entry_comments') 

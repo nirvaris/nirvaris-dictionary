@@ -1,14 +1,15 @@
 from django.contrib import admin
 
-from .models import WordEntry, Tag, Comment, Language, Picture, WordFunction
+from .models import WordEntry, Tag, Comment, Language, Picture, WordClass, WordContent
 
 
-#class WordEntryAdmin(admin.ModelAdmin):
-#    list_filter = ('tags','author','template')
-#    list_display = ('word','relative_url','short_description','meaning','scientific_name','curiosities','phonetics','audio_file','template','access_count','created')
-#    search_fields = ['word','relative_url','short_description','meaning','scientific_name','curiosities']
-  
-admin.site.register(WordEntry)
+class WordEntryAdmin(admin.ModelAdmin):
+    list_filter = ('languages','word_classes','words_related','tags','author','template')
+    list_display = ('word','relative_url','short_description','is_published','phonetics','audio_file','template','access_count','created','word_content')
+    search_fields = ['word','relative_url','short_description','word_content']
+    list_editable = ('is_published',)
+    
+admin.site.register(WordEntry,WordEntryAdmin)
 
 
 class TagAdmin(admin.ModelAdmin):
@@ -24,7 +25,9 @@ class CommentAdmin(admin.ModelAdmin):
     list_editable = ('is_approved',)
     search_fields = ['content']
 
+
+admin.site.register(WordContent)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Language)
 admin.site.register(Picture)
-admin.site.register(WordFunction)
+admin.site.register(WordClass)
