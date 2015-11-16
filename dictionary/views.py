@@ -142,7 +142,7 @@ class SearchView(View):
             keywords = cleaned_data['search_input'].split()
             q_obj = Q()
             for keyword in keywords:
-                q_obj &= Q(word_icontains=keyword) | Q(short_description_icontains=keyword) | Q(scientific_name_icontains=keyword) | Q(meaning_icontains=keyword) | Q(curiosities_icontains=keyword)
+                q_obj &= Q(word__icontains=keyword) | Q(short_description__icontains=keyword) | Q(word_content__content__icontains=keyword))
                 
             word_entries = WordEntry.objects.all()
 
