@@ -129,7 +129,7 @@ class SearchView(View):
     
     def post(self, request):
         
-        #pdb.set_trace()
+        
         form = SearchForm(request.POST)
         
         form_valid = form.is_valid()
@@ -137,12 +137,13 @@ class SearchView(View):
         
         word_entries = None
         
+        pdb.set_trace()
         if form_valid:
             
             keywords = cleaned_data['search_input'].split()
             q_obj = Q()
             for keyword in keywords:
-                q_obj &= Q(word__icontains=keyword) | Q(short_description__icontains=keyword) | Q(word_content__content__icontains=keyword))
+                q_obj &= Q(word__icontains=keyword) | Q(short_description__icontains=keyword) | Q(word_content__content__icontains=keyword)
                 
             word_entries = WordEntry.objects.all()
 
