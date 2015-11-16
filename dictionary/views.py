@@ -137,7 +137,7 @@ class SearchView(View):
         
         word_entries = None
         
-        pdb.set_trace()
+        #pdb.set_trace()
         if form_valid:
             
             keywords = cleaned_data['search_input'].split()
