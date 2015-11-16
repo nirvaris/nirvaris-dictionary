@@ -1,0 +1,61 @@
+.dictionary-live-search .form-group {
+	margin-bottom: 0;
+}
+
+.search-result {
+	position: relative;
+}
+.search-result ul {
+    list-style: none;
+    padding: 0;
+    position: absolute;
+    width: 100%;
+    margin: 0 auto;
+	border: 1px solid #ccc;
+}
+.search-result-item {
+    margin: 0 auto;
+    background: #fff;
+}
+.search-result-item a {
+    background-position: 20px center;
+    background-repeat: no-repeat;
+    padding: 7px 14px 7px 14px;
+    display: block;
+    color: #595959;
+}
+.search-result-item a:hover {
+	background: #fafafa;
+}
+
+
+
+.dictionary-alphabetical-search {
+    margin: 15px 0 0 0;
+}
+.dictionary-alphabetical-search-list {
+    list-style: none;
+    padding: 0;
+    display: block;
+    overflow: hidden;
+    margin: 0;
+}
+.dictionary-alphabetical-search-list li {
+    float: left;
+    margin-right: 4px;
+}
+.dictionary-alphabetical-search-list li:hover {
+	background: #ccc;
+}
+.dictionary-alphabetical-search-list li a {
+    width: 24px;
+    display: block;
+    text-align: center;
+}
+.dictionary-alphabetical-search-list li:hover a {
+	color: #000;
+}
+
+
+
+
