@@ -1,5 +1,23 @@
-{% load staticfiles %}
+{% extends "theme-base.html" %}
 {% load i18n %}
+{% load form_style %}
+{% load messages_style %}
 {% load search_form_tag %}
+{% load staticfiles %}
 
-{% search_form_tag %}
+{% block head_title %}{% trans 'Search' %}{% endblock %}
+
+
+{% block content %}
+	<link href="{% static 'css/dictionary.css' %}" rel="stylesheet">
+	<div class="row">
+		<div class="col-md-2">
+		</div>
+		<div class="col-md-8">
+			{% search_form_tag %}
+		</div>
+		<div class="col-md-2">
+		</div>
+	</div>
+	
+{% endblock %}
