@@ -114,6 +114,11 @@ class UploadCSV(View):
 
 class SearchView(View):
 
+    def get(self, request):
+        
+        request_context = RequestContext(request)
+        return render_to_response('search-form-get.html', request_context)        
+    
     def post(self, request):
         form = SearchForm(request.POST)
         
