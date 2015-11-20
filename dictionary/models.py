@@ -55,7 +55,7 @@ class WordEntry(models.Model):
     template = models.CharField(max_length=50, null=False, default='word-entry-default.html')
     is_published = models.BooleanField(default=False)
     access_count = models.BigIntegerField(default=0, null=False)
-    word_content = models.ForeignKey(WordContent, related_name='word_entries',null=False) 
+    word_content = models.ForeignKey(WordContent, related_name='word_entries',null=True) 
     words_related = models.ManyToManyField('WordEntry', related_name='word_related_to')
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True) 
