@@ -7,6 +7,7 @@ from .views import WordEntryView, SearchView, UploadCSV, SearchFormTag, UploadTa
 
 
 urlpatterns = [
+    url(r'^profile/', include('n_profile.urls')),
     url(r'^admin/', include(admin.site.urls)),    
     url(r'^search-form-tag$', SearchFormTag.as_view(), name='search-form-tag'),
     url(r'^search$', SearchView.as_view(), name='search'),
