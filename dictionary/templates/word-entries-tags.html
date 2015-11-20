@@ -1,6 +1,7 @@
 {% extends "theme-base.html" %}
 {% load i18n %}
 {% load form_style %}
+{% load staticfiles %}
 
 {% block head_title %}{{ page.title }}{% endblock %}
 
@@ -9,13 +10,27 @@
 {% endblock %}
 
 {% block content %}
+	<link href="{% static 'css/dictionary.css' %}" rel="stylesheet">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="row">
 				<div class="col-md-12">
-					{% for word_entry in word_entries %}
-						<p>{{ word_entry.word }}</p>
-					{% endfor %}
+					<ul class="dictionary-word-list">
+						{% for word_entry in word_entries %}
+							<li>
+								<a href="{{ word_entry.relative_url }}">
+									<div class="word-thumb">
+										<!--<img src="{% static 'image/fav.png' %}">-->
+										<img src="http://placehold.it/90x90">
+									</div>
+									<div class="word-text">
+										<h3>{{ word_entry.word }}</h3>
+										<p>{{ word_entry.short_description }}</p>
+									</div>
+								</a>
+							</li>
+						{% endfor %}
+					</ul>
 				</div>
 			</div>
 		</div>

@@ -1,22 +1,21 @@
 <div>
-	<!-- live-search -->
 	<div class="dictionary-live-search" ng-controller="SearchRequestCtrl">
 		<form id="searchform" class="clearfix" ng-submit="search()" >
 			{% csrf_token %}
 			<div class="form-group">
-				<input type="text" name="ipt-text" class="form-control" placeholder="Digite alguma palavra" ng-focus='onFocus()' ng-blur='onBlur()' ng-model="keyword">
+				<input type="text" name="ipt-text" class="form-control" placeholder="Digite alguma palavra" autocomplete="off" ng-focus='onFocus()' ng-blur='onBlur()' ng-change="onChange()" ng-model="keyword">
 			</div>
 		</form>
 		<div class="search-result ng-hide" ng-hide="hideSearchResult">
 			<ul>
-				<li class="search-result-item" ng-repeat="word in words">
-					<a href="{% verbatim %}{{ word.relative_url }}{% endverbatim %}"><span>{% verbatim %}{{ word.word }}{% endverbatim %}</span></a>
+				<li class="search-result-item" ng-repeat="word in words" ng-click="onItemClick()">
+					<a href="{% verbatim %}{{ word.relative_url }}{% endverbatim %}" class="search-item-word"><span>{% verbatim %}{{ word.word }}{% endverbatim %}</span></a>
 				</li>
 			</ul>
 		</div>
 	</div>
+	<!-- End . dictionary-live-search-->
 
-	<!-- alphabetical-search -->
 	<div class="dictionary-alphabetical-search">
 		<div class="dictionary-alphabetical-search-wrap">
 			<ul class="dictionary-alphabetical-search-list">
@@ -49,16 +48,15 @@
 			</ul>
 		</div>
 	</div>
+	<!-- End .dictionary-alphabetical-search -->
 </div>
 
-
-
-<!-- onfocus="if (this.value == 'Digite alguma palavra') {this.value = '';}" onblur="if (this.value == '')  {this.value = 'Digite alguma palavra';}" value="Digite alguma palavra"  -->
 
 <script>
 
 nirvarisControllers.controller('SearchRequestCtrl', ['$scope', '$http', function ($scope, $http, $sce) {
 	$scope.keyword = '';
+	$scope.words = [];
 	$scope.results = [];
 	$scope.hideSearchResult = true;
 	
@@ -67,35 +65,53 @@ nirvarisControllers.controller('SearchRequestCtrl', ['$scope', '$http', function
 	//$scope.hideSearchResult = false;
 	
 	$scope.onFocus = function(){
-		console.log('focus');
+		if ($scope.words.length > 0) {
+			$scope.hideSearchResult = false;
+		}
 	}
 	
 	$scope.onBlur = function(){
-		console.log('blur');
+		if (event.relatedTarget) {
+			if (event.relatedTarget.className != 'search-item-word') {
+				$scope.hideSearchResult = true;
+			}
+		} else {
+			$scope.hideSearchResult = true;
+		}
 	}
-
-	$scope.search = function() {
-		/*$http.get('/dictionary/search', { params: $scope.keyword },
-	        function(response) { $scope.results = response; },
-	        function(failure) { console.log("failed :(", failure); }
-		);*/
-		
-		
+	
+	$scope.onItemClick = function(){
+		console.log('te');
+	}
+	
+	$scope.onChange = function(){
 		$http.post('/search', $.param({ 
 			search_input: $scope.keyword,
 			csrfmiddlewaretoken: angular.element(document.getElementsByName('csrfmiddlewaretoken')[0]).val() 
 		}), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).
 		then(function(response) {
-			// this callback will be called asynchronously
-			// when the response is available
 			$scope.words = response.data; 
-			$scope.hideSearchResult = false;
+			$scope.hideSearchResult = ($scope.words.length == 0) ? true : false;
 		}, function(response) {
-			// called asynchronously if an error occurs
-			// or server returns response with an error status.
 			console.log("failed :(", response); 
 		});
-	};
+	}
+	
+	/* on form submit
+	$scope.search = function() {
+		$http.post('/search', $.param({ 
+			search_input: $scope.keyword,
+			csrfmiddlewaretoken: angular.element(document.getElementsByName('csrfmiddlewaretoken')[0]).val() 
+		}), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).
+		then(function(response) {
+			$scope.words = response.data; 
+			if ($scope.words.length > 0) {
+				$scope.hideSearchResult = false;
+			}
+		}, function(response) {
+			console.log("failed :(", response); 
+		});
+	};*/
 
 }]);
 
