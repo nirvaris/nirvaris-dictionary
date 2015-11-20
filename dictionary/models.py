@@ -36,7 +36,7 @@ class WordContent(models.Model):
 
 class Picture(models.Model):
     description = models.CharField(max_length=155)    
-    file_name = models.CharField(max_length=255, unique=True)
+    file_name = models.CharField(max_length=255)
     display_order = models.PositiveSmallIntegerField(default=0)
     word_content = models.ForeignKey(WordContent, related_name='pictures')
     def __str__(self):
@@ -45,8 +45,8 @@ class Picture(models.Model):
 class WordEntry(models.Model):
     author = models.ForeignKey(User, related_name='word_entries')
     relative_url = models.CharField(max_length=155, unique=True, null=False)
-    word = models.CharField(max_length=100, null=False, unique=True)
-    short_description = models.CharField(max_length=155, unique=True, null=False)
+    word = models.CharField(max_length=100, null=False)
+    short_description = models.CharField(max_length=155, null=False)
     languages = models.ManyToManyField(Language, related_name='word_entries')
     word_classes = models.ManyToManyField(WordClass, related_name='word_entries')
     audio_file = models.CharField(max_length=255, null=True, blank=True)

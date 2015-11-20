@@ -60,6 +60,10 @@
 {% for word_related in word_entry.words_related.all %}
 	 <p><a href="{{ word_related.relative_url }}">{{ word_related.word }}</a></p>
 {% endfor %}
+{% for word_related in word_entry.word_related_to.all %}
+	 <p><a href="{{ word_related.relative_url }}">{{ word_related.word }}</a></p>
+{% endfor %}
+
 
 <p><b>Conteúdo</b></p>
 {{ word_entry.word_content }}
