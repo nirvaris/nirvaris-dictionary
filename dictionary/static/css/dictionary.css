@@ -57,5 +57,19 @@
 }
 
 
-
-
+.dictionary-word-list {
+	list-style: none;
+}
+.dictionary-word-list li {
+	display: block;
+	overflow: hidden;
+	margin-bottom: 15px;
+}
+.dictionary-word-list .word-thumb {
+	float: left;
+	display: block;
+	margin-right: 20px;
+}
+.dictionary-word-list .word-text {
+	float: left;
+}
