@@ -219,7 +219,7 @@ def import_csv(request, file_path, user):
     log_file_path = file_path + '.log'
     csv_log = open(log_file_path, 'w')
     word_saved = 0
-    
+    w_r = {}
     _write_on_log(csv_log, 0, _('success upload - starting reading'))
     try:
         
@@ -247,6 +247,7 @@ def import_csv(request, file_path, user):
                             _write_on_log(csv_log, line, _('[ROW EMPTY]'))
                             continue
 
+                        
                         # FOR THE CONTENT
                         word_content = None
                         if row[header['content_id']].isdigit() and WordContent.objects.filter(id=row[header['content_id']]).exists(): 
@@ -271,21 +272,7 @@ def import_csv(request, file_path, user):
                                 word_content.content = row[header['content']]
                                 word_content.save()
 
-                        #check in RELATED TERMS
-                        if not word_content:
-                            words_related = row[header['words_related']].split(',')
-                            for word_related in words_related:
-                                try:
-                                    word_r = WordEntry.objects.get(relative_url=word_related)
-                                    word_content = word_r.word_content
-                                except:
-                                    continue
-
-                        if not word_content:
-                            _write_on_log(csv_log, line, _('[ERROR CODE 1020] No content or related words were found.'))
-                            is_to_commit = False
-                            continue
-                                
+                                 
                         # FOR THE WORD
                         if row[header['id']].isdigit() and WordEntry.objects.filter(id=row[header['id']]).exists(): 
                             word_entry = WordEntry.objects.get(id=row[header['id']])
@@ -299,7 +286,7 @@ def import_csv(request, file_path, user):
                                 is_to_commit = False
                                 continue
                             if WordEntry.objects.filter(relative_url=row[header['relative_url']]).exists():
-                                _write_on_log(csv_log, line, _('[ERROR CODE 1003] URL already exists.'))
+                                _write_on_log(csv_log, line, _('[ERROR CODE 1003] URL already exists: ' + row[header['relative_url']]))
                                 is_to_commit = False
                                 continue                            
                             word_entry = WordEntry()
@@ -345,7 +332,7 @@ def import_csv(request, file_path, user):
                             pc_delete.delete()
                             
                         if row[header['pictures']] != '':
-                            pictures = row[header['pictures']].split(',')
+                            pictures = row[header['pictures']].replace('\'','').split(',')
                             descriptions = None
                             if row[header['pictures_description']] != '':
                                 descriptions = row[header['pictures_description']].split(',')
@@ -354,25 +341,33 @@ def import_csv(request, file_path, user):
                             nu_order = 0;
                             for picture in pictures:
                                 if descriptions:
-                                    desc_to_use = descriptions[nu_order]
+                                    try:
+                                        desc_to_use = descriptions[nu_order]
+                                    except:
+                                        pass
                                 pic = Picture(word_content=word_content,file_name=picture.strip(), description=desc_to_use, display_order=nu_order)
                                 pic.save()
                                 nu_order += 1;
 
                             word_entry.save()
 
-                        #word related
-                        if not _save_words_related(csv_log, line, word_entry, row[header['words_related']]):
-                            is_to_commit = False
-                            continue
+
                         else:
                             word_entry.save()
 
+                        if row[header['words_related']]!='':
+                            w_r[row[header['relative_url']]] = []
+                            words_related = row[header['words_related']].split(',')
+                            for word_related in words_related:
+                                w_r[row[header['relative_url']]].append(word_related)
+                        
                         word_saved += 1
 
                     except:
                         is_to_commit = False
                         _write_on_log(csv_log, line, _('[ERROR CODE 9000] Unexpected error saving word entry: message: ') + str(sys.exc_info()[1]))
+                
+                _words_related(csv_log, w_r)
                 
                 if not is_to_commit:
                     raise CSVImportException('[ERROR CODE 9000] Errors have happened. Transaction was canceled. No data was saved.')
@@ -397,6 +392,22 @@ def import_csv(request, file_path, user):
     os.remove(file_path)
     csv_log.close()
     return log_file_path
+
+def _words_related(csv_log, w_r):
+    
+    _write_on_log(csv_log, 0, _('Add related words'))
+    not_found = ''
+    for key, related in w_r.items():
+        word_entry = WordEntry.objects.get(relative_url=key)
+        for r in related:
+            if not WordEntry.objects.filter(relative_url=r).exists():
+                not_found += ' ' + r
+            else:
+                word_entry.words_related.add(WordEntry.objects.get(relative_url=r))
+        word_entry.save()
+    if not_found.strip()!='':
+        _write_on_log(csv_log, 0, _('[ERROR CODE 2009] these related word where not found, so were not added: ' + not_found))
+
 
 def _save_words_related(csv_log, line, word_entry,  field_csv_value):
 
@@ -495,6 +506,6 @@ def _find_header(csv_log, csv_reader, CSV_FIELDS):
 
 def _write_on_log(csv_log, line, msg):
     #pdb.set_trace()
-    csv_log.write('[' + datetime.now().strftime("%y-%m-%d %H:%M") + '] [' + _('LINE') + ' ' + str(line) + '] ' + msg + '\n')
+    csv_log.write('[' + datetime.now().strftime("%y-%m-%d %H:%M") + '] [' + _('LINE') + ' ' + str(line+1) + '] ' + msg + '\n')
     
   

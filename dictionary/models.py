@@ -36,7 +36,7 @@ class WordContent(models.Model):
 
 class Picture(models.Model):
     description = models.CharField(max_length=155)    
-    file_name = models.CharField(max_length=255, unique=True)
+    file_name = models.CharField(max_length=255)
     display_order = models.PositiveSmallIntegerField(default=0)
     word_content = models.ForeignKey(WordContent, related_name='pictures')
     def __str__(self):
@@ -45,8 +45,8 @@ class Picture(models.Model):
 class WordEntry(models.Model):
     author = models.ForeignKey(User, related_name='word_entries')
     relative_url = models.CharField(max_length=155, unique=True, null=False)
-    word = models.CharField(max_length=100, null=False, unique=True)
-    short_description = models.CharField(max_length=155, unique=True, null=False)
+    word = models.CharField(max_length=100, null=False)
+    short_description = models.CharField(max_length=155, null=False)
     languages = models.ManyToManyField(Language, related_name='word_entries')
     word_classes = models.ManyToManyField(WordClass, related_name='word_entries')
     audio_file = models.CharField(max_length=255, null=True, blank=True)
@@ -55,7 +55,7 @@ class WordEntry(models.Model):
     template = models.CharField(max_length=50, null=False, default='word-entry-default.html')
     is_published = models.BooleanField(default=False)
     access_count = models.BigIntegerField(default=0, null=False)
-    word_content = models.ForeignKey(WordContent, related_name='word_entries',null=False) 
+    word_content = models.ForeignKey(WordContent, related_name='word_entries',null=True) 
     words_related = models.ManyToManyField('WordEntry', related_name='word_related_to')
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True) 
