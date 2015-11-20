@@ -4,47 +4,26 @@
 
 {% block head_title %}{{ word_entry.word }}{% endblock %}
 
-<p><b>PALAVRA</b></p>
-<p>{{ word_entry.word }}</p>
-
-
-<p><b>Descrição:</b></p>
-<p>{{ word_entry.short_description }}</p>
-<p>Audio: {{ word_entry.audio_file }}</p>
-<p>Phonetics: {{ word_entry.phonetics }}</p>
-
-<p><b>Linguagens</b></p>
-{% for language in word_entry.languages.all %}
-	 <p>{{ language.name }}</p>
-{% endfor %}
-
-					<div class="row">
-						<div class="col-md-8">
-							<p class="entry-"><strong>Também conhecido como: </strong></p>
-							<p class="entry-languages"><strong>Língua de origem: </strong>
-								{% for language in word_entry.languages.all %}
-								<span>{{ language.name }}</span>
-								{% endfor %}
-							</p>
-							<p class=""><strong>Nome científico: </strong>{{ word_entry.scientific_name }}</p>
-							<p class="entry-meaning">{{ word_entry.meaning|safe }}</p>
-							<p class="entry-curiosities">{{ word_entry.curiosities|safe }}</p>
-						</div>
-						<div class="col-md-4">
-						</div>
-					</div>
-					
-					<div class="entry-tags">
-						<p>Tags: 
-							{% for tag in word_entry.tags.all %}
-								<span>{{ tag.name }}</span>
-							{% endfor %}
-						</p>
-					</div>
-				</div>
-			</div>
+{% block content %}
+	<div class="word-entry">
+		<h1>{{ word_entry.word }}</h1>
+		<p class="lead">{{ word_entry.short_description }}</p>
+		{% if word_entry.audio_file %}
+			<div class="word-entry-audio">{{ word_entry.audio_file }}</div>
+		{% endif %}
+		{% if word_entry.phonetics %}
+			<div class="word-entry-audio">{{ word_entry.phonetics }}</div>
+		{% endif %}
+		<div>
+			
+		<div class="word-entry-languages">
+			<p>
+				<b>{% trans 'Línguas:' %}</b>
+				{% for language in word_entry.languages.all %}{% if not forloop.first %}, {% endif %}{{ language.name }}{% endfor %}
+			</p>
 		</div>
 	</div>
+
 	
 <p><b>Classes</b></p>
 {% for word_class in word_entry.word_classes.all %}
@@ -63,3 +42,5 @@
 
 <p><b>Conteúdo</b></p>
 {{ word_entry.word_content }}
+
+{% endblock %}
