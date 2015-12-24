@@ -1,6 +1,5 @@
-Django==1.8.5
 git+https://github.com/nirvaris/nirvaris-profile
-git+https://github.com/nirvaris/nirvaris-style-snippet
 git+https://github.com/nirvaris/nirvaris-theme-default
-wheel==0.26.0
-pycrypto==2.6.1
+Django
+wheel
+pycrypto

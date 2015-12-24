@@ -8,7 +8,7 @@ from ..forms import SearchForm
 
 register = template.Library()
 
-@register.inclusion_tag('search-form.html')
+@register.inclusion_tag('tag-search-form.html')
 def search_form_tag():
     form = SearchForm()
     return {'search_form':form}

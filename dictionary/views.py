@@ -19,8 +19,8 @@ from .csv_things import import_csv, import_tag_csv, import_language_csv, DICTION
 from .forms import CommentForm, SearchForm, UploadCSVForm
 from .models import WordEntry
 
-class DownloadImportLog(View):
-    
+class DownloadImportLogView(View):
+
     def get(self, request):
         log_file = open(request.session['log_file_path'])
         #pdb.set_trace()
@@ -29,13 +29,13 @@ class DownloadImportLog(View):
 
         return response
 
-class UploadLanguageCSV(View):
+class UploadLanguageCSVView(View):
 
     def get(self, request):
         form = UploadCSVForm()
         request_context = RequestContext(request,{'upload_form':form, 'mapped_fields': LANGUAGE_CSV_FIELDS})
         return render_to_response('upload-language-csv-form.html', request_context)
-        
+
     def post(self, request):
 
         form = UploadCSVForm(request.POST, request.FILES)
@@ -49,22 +49,22 @@ class UploadLanguageCSV(View):
         with open(file_path , 'wb+') as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
-        
+
         log_file_path = import_language_csv(request, file_path)
-        
+
         request.session['log_file_path'] = log_file_path
-        
+
         form = UploadCSVForm()
         request_context = RequestContext(request,{'upload_form':form,'log_link':'download_log', 'mapped_fields': TAG_CSV_FIELDS})
         return render_to_response('upload-language-csv-form.html', request_context)
 
-class UploadTagCSV(View):
+class UploadTagCSVView(View):
 
     def get(self, request):
         form = UploadCSVForm()
         request_context = RequestContext(request,{'upload_form':form, 'mapped_fields': TAG_CSV_FIELDS})
         return render_to_response('upload-tag-csv-form.html', request_context)
-        
+
     def post(self, request):
 
         form = UploadCSVForm(request.POST, request.FILES)
@@ -78,22 +78,22 @@ class UploadTagCSV(View):
         with open(file_path , 'wb+') as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
-        
+
         log_file_path = import_tag_csv(request, file_path)
-        
+
         request.session['log_file_path'] = log_file_path
-        
+
         form = UploadCSVForm()
         request_context = RequestContext(request,{'upload_form':form,'log_link':'download_log', 'mapped_fields': TAG_CSV_FIELDS})
         return render_to_response('upload-tag-csv-form.html', request_context)
 
-class UploadCSV(View):
+class UploadCSVView(View):
 
     def get(self, request):
         form = UploadCSVForm()
         request_context = RequestContext(request,{'upload_form':form, 'mapped_fields': DICTIONARY_CSV_FIELDS})
         return render_to_response('upload-csv-form.html', request_context)
-        
+
     def post(self, request):
 
         form = UploadCSVForm(request.POST, request.FILES)
@@ -107,44 +107,42 @@ class UploadCSV(View):
         with open(file_path , 'wb+') as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
-        
+
         log_file_path = import_csv(request, file_path, request.user)
-        
+
         request.session['log_file_path'] = log_file_path
-        
+
         form = UploadCSVForm()
         request_context = RequestContext(request,{'upload_form':form,'log_link':'download_log', 'mapped_fields': DICTIONARY_CSV_FIELDS})
         return render_to_response('upload-csv-form.html', request_context)
 
 
-class SearchFormTag(TemplateView):
-    template_name = "test-search-form-tag.html"
+class DemoSearchFormView(TemplateView):
+    template_name = "demo-search-form.html"
 
 class SearchView(View):
 
     def get(self, request):
-        
+
         request_context = RequestContext(request)
-        return render_to_response('search-form-get.html', request_context)        
-    
+        return render_to_response('search-form-get.html', request_context)
+
     def post(self, request):
-        
-        
         form = SearchForm(request.POST)
-        
+
         form_valid = form.is_valid()
         cleaned_data = form.clean()
-        
+
         word_entries = None
-        
+
         #pdb.set_trace()
         if form_valid:
-            
+
             keywords = cleaned_data['search_input'].split()
             q_obj = Q()
             for keyword in keywords:
                 q_obj &= Q(word__icontains=keyword) | Q(short_description__icontains=keyword) | Q(word_content__content__icontains=keyword)
-            
+
             #pdb.set_trace()
             word_entries = WordEntry.objects.filter(q_obj)
 
@@ -153,13 +151,13 @@ class SearchView(View):
 
 
 class WordEntryView(View):
-    
+
     def get(self, request, tags):
-        
+
         tag_list = tags.split('/')
         #pdb.set_trace()
         if WordEntry.objects.filter(relative_url=tag_list[-1]).exists():
-        
+
             word_entry = WordEntry.objects.get(relative_url=tag_list[-1])
             word_entry.access_count += 1
             word_entry.save()
@@ -168,13 +166,13 @@ class WordEntryView(View):
             if request.user.is_authenticated():
                 form_initial['email'] = request.user.email
                 form_initial['name'] = request.user.get_full_name()
-            
+
             form = CommentForm(initial=form_initial)
-            
+
             request_context = RequestContext(request,{'word_entry':word_entry,'form':form})
 
             return render_to_response(word_entry.template, request_context)
-        
+
         #pdb.set_trace()
 
         if tag_list[0]!='':
@@ -183,20 +181,20 @@ class WordEntryView(View):
                 word_entries = word_entries.filter(tags__name__iexact=tag)
         else:
             word_entries = WordEntry.objects.all()
-            
+
         request_context = RequestContext(request,{'word_entries':word_entries})
-        
+
         return render_to_response('word-entries-tags.html', request_context)
 
     def post(self, request, tags):
-        
+
         form = CommentForm(request.POST)
-        
+
         form_valid = form.is_valid()
         cleaned_data = form.clean()
-            
+
         word_entry = WordEntry.objects.get(id=cleaned_data['word_entry_id'])
-        
+
         if form_valid:
             form.save()
             form = CommentForm(initial={'word_entry_id': word_entry_id.id})
