@@ -3,30 +3,28 @@
 {% load theme_form_tags %}
 {% load theme_messages_tags %}
 
-
-
 {% block content %}
 
-	<div class="row">
-		<div class="col-md-3">
-		</div>
-		<div class="col-md-6">
-			<form method="POST" action="#" enctype="multipart/form-data">{% csrf_token %}
-				<h4>{% trans 'Drop us an email' %}</h4>
-				{{ messages|messages_style }}
-				{{ upload_form|form_style }}
-				<div class="form-group">
-					{# Translators: The submit button on the comments form. #}
-					<input class="btn btn-primary btn-lg btn-block" type="submit" value="{% trans 'Send' %}" />
-				</div>
-			</form>
-		</div>
-		{% if log_link %}
-		<a href="{% url 'download-log' %}">{% trans 'Download the log' %}</a>
-		{% endif %}
-		<div class="col-md-3">
-		</div>
+<div class="row">
+	<div class="col-md-3">
 	</div>
+	<div class="col-md-6">
+		<form method="POST" action="#" enctype="multipart/form-data">{% csrf_token %}
+			<h4>{% trans 'Drop us an email' %}</h4>
+			{{ messages|messages_style }}
+			{{ upload_form|form_style }}
+			<div class="form-group">
+				{# Translators: The submit button on the comments form. #}
+				<input class="btn btn-primary btn-lg btn-block" type="submit" value="{% trans 'Send' %}" />
+			</div>
+		</form>
+	</div>
+	{% if log_link %}
+	<a href="{% url 'download-log' %}">{% trans 'Download the log' %}</a>
+	{% endif %}
+	<div class="col-md-3">
+	</div>
+</div>
 
 <h1>{% trans 'DOCUMENTATION'%}</h1>
 <p><b>{% trans 'Mapings'%}</b></p>
