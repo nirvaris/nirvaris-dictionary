@@ -1,7 +1,7 @@
 
 {% load i18n %}
-{% load form_style %}
-{% load messages_style %}
+{% load theme_form_tags %}
+{% load theme_messages_tags %}
 
 
 
@@ -13,7 +13,7 @@
 		<div class="col-md-6">
 			<form method="POST" action="#" enctype="multipart/form-data">{% csrf_token %}
 				<h4>{% trans 'Drop us an email' %}</h4>
-				{{ messages|messages_style }}						
+				{{ messages|messages_style }}
 				{{ upload_form|form_style }}
 				<div class="form-group">
 					{# Translators: The submit button on the comments form. #}
@@ -37,7 +37,7 @@
  <li> {{ key }}: <b>{{ value }}</b></li>
   {% endfor %}
 </br>
-	
+
 <h1>{% trans 'Possible errors list'%}</h1>
 </br>
 <p><b>{% trans '[ERROR CODE 1002] Header not found. All process was cancelled.'%}</b></p>
