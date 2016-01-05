@@ -1,10 +1,14 @@
 {% extends "theme-base.html" %}
 {% load staticfiles %}
 {% load i18n %}
+{% load theme_image_gallery_tags %}
 
 {% block head_title %}{{ word_entry.word }}{% endblock %}
 
 {% block content %}
+	
+	
+	
 	<div class="word-entry">
 		<h1>{{ word_entry.word }}</h1>
 		<p class="lead">{{ word_entry.short_description }}</p>
@@ -14,37 +18,50 @@
 		{% if word_entry.phonetics %}
 			<div class="word-entry-audio">{{ word_entry.phonetics }}</div>
 		{% endif %}
-		<div>
+		<div class="row">
 			
-		<div class="word-entry-languages">
-			<p>
-				<b>{% trans 'Línguas:' %}</b>
-				{% for language in word_entry.languages.all %}{% if not forloop.first %}, {% endif %}{{ language.name }}{% endfor %}
-			</p>
+			<div class="col-md-8">
+			
+				<div class="word-entry-languages">
+					<p>
+						<b>{% trans 'Línguas:' %}</b>
+						{% for language in word_entry.languages.all %}{% if not forloop.first %}, {% endif %}{{ language.name }}{% endfor %}
+					</p>
+				</div>
+		
+				<div class="word-entry-classes">
+					<p>
+						<b>{% trans 'Classes:' %}</b>
+						{% for word_class in word_entry.word_classes.all %}{% if not forloop.first %}, {% endif %}{{ word_class.name }}{% endfor %}
+					</p>
+				</div>
+		
+				<div class="word-entry-tags">
+					<p>
+						<b>{% trans 'Tags:' %}</b>
+						{% for tag in word_entry.tags.all %}{% if not forloop.first %}, {% endif %}<a href=="#">{{ tag.display }}</a>{% endfor %}
+					</p>
+				</div>
+		
+				<div class="word-entry-related">
+					<p>
+						<b>{% trans 'Palavras Relacionadas:' %}</b>
+						{% for word_related in word_entry.words_related.all %}{% if not forloop.first %}, {% endif %}<a href="{{ word_related.relative_url }}">{{ word_related.word }}</a>{% endfor %}
+					</p>
+				</div>
+		
+				<div class="word-entry-content">
+					{{ word_entry.word_content }}
+				</div>
+			
+			</div>
+			
+			<div class="col-md-4">
+				{{ images|horizontal_thumbs }}
+			</div>
+			
 		</div>
+		
 	</div>
-
-	
-<p><b>Classes</b></p>
-{% for word_class in word_entry.word_classes.all %}
-	 <p>{{ word_class.name }}</p>
-{% endfor %}
-
-<p><b>Tags</b></p>
-{% for tag in word_entry.tags.all %}
-	 <p>{{ tag.display }}</p>
-{% endfor %}
-
-<p><b>Palavras relacionadas</b></p>
-{% for word_related in word_entry.words_related.all %}
-	 <p><a href="{{ word_related.relative_url }}">{{ word_related.word }}</a></p>
-{% endfor %}
-{% for word_related in word_entry.word_related_to.all %}
-	 <p><a href="{{ word_related.relative_url }}">{{ word_related.word }}</a></p>
-{% endfor %}
-
-
-<p><b>Conteúdo</b></p>
-{{ word_entry.word_content }}
 
 {% endblock %}
