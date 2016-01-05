@@ -7,8 +7,6 @@
 
 {% block content %}
 	
-	
-	
 	<div class="word-entry">
 		<h1>{{ word_entry.word }}</h1>
 		<p class="lead">{{ word_entry.short_description }}</p>
@@ -57,11 +55,13 @@
 			</div>
 			
 			<div class="col-md-4">
-				{{ word_entry.word_content.pictures.all|horizontal_thumbs }}
+				{% if word_entry.word_content.pictures.all %}
+					{{ word_entry.word_content.pictures.all|horizontal_thumbs }}
+				{% else %}
+					<img src="{{ empty_image }}">
+				{% endif %}
 			</div>
-			
 		</div>
-		
 	</div>
 
 {% endblock %}
