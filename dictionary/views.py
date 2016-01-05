@@ -19,6 +19,12 @@ from .csv_things import import_csv, import_tag_csv, import_language_csv, DICTION
 from .forms import CommentForm, SearchForm, UploadCSVForm
 from .models import WordEntry
 
+NV_DICTIONARY_GALLERY_EMPTY_IMAGE = 'static/image/emtpy-image.jpg'
+
+if hasattr(settings, 'NV_THEME_GALLERY_EMPTY_IMAGE'):
+    if settings.NV_THEME_GALLERY_EMPTY_IMAGE:
+        NV_THEME_GALLERY_EMPTY_IMAGE = settings.NV_THEME_GALLERY_EMPTY_IMAGE
+
 class DownloadImportLogView(View):
 
     def get(self, request):
@@ -199,6 +205,6 @@ class WordEntryView(View):
             form.save()
             form = CommentForm(initial={'word_entry_id': word_entry_id.id})
 
-        request_context = RequestContext(request,{'word_entry':word_entry,'form':form})
+        request_context = RequestContext(request,{'word_entry':word_entry,'form':form, 'empty_image': NV_DICTIONARY_GALLERY_EMPTY_IMAGE})
 
         return render_to_response(word_entry.template, request_context)
