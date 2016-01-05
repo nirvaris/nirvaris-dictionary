@@ -6,6 +6,7 @@
 {% block head_title %}{{ word_entry.word }}{% endblock %}
 
 {% block content %}
+	<link href="{% static 'css/dictionary.css' %}" rel="stylesheet">
 	
 	<div class="word-entry">
 		<h1>{{ word_entry.word }}</h1>
@@ -18,7 +19,7 @@
 		{% endif %}
 		<div class="row">
 			
-			<div class="col-md-8">
+			<div class="col-md-6">
 			
 				<div class="word-entry-languages">
 					<p>
@@ -37,7 +38,7 @@
 				<div class="word-entry-tags">
 					<p>
 						<b>{% trans 'Tags:' %}</b>
-						{% for tag in word_entry.tags.all %}{% if not forloop.first %}, {% endif %}<a href=="#">{{ tag.display }}</a>{% endfor %}
+						{% for tag in word_entry.tags.all %}{% if not forloop.first %}, {% endif %}<a href="/{{ tag.display }}">{{ tag.display }}</a>{% endfor %}
 					</p>
 				</div>
 		
@@ -54,7 +55,7 @@
 			
 			</div>
 			
-			<div class="col-md-4">
+			<div class="col-md-6">
 				{% if word_entry.word_content.pictures.all %}
 					{{ word_entry.word_content.pictures.all|horizontal_thumbs }}
 				{% else %}

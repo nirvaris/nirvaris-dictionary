@@ -19,7 +19,7 @@ from .csv_things import import_csv, import_tag_csv, import_language_csv, DICTION
 from .forms import CommentForm, SearchForm, UploadCSVForm
 from .models import WordEntry
 
-NV_DICTIONARY_GALLERY_EMPTY_IMAGE = 'static/image/emtpy-image.jpg'
+NV_DICTIONARY_GALLERY_EMPTY_IMAGE = 'static/image/empty-image.jpg'
 
 if hasattr(settings, 'NV_THEME_GALLERY_EMPTY_IMAGE'):
     if settings.NV_THEME_GALLERY_EMPTY_IMAGE:

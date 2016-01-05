@@ -73,3 +73,8 @@
 .dictionary-word-list .word-text {
 	float: left;
 }
+
+
+.word-entry .row {
+	margin-top: 50px;
+}
