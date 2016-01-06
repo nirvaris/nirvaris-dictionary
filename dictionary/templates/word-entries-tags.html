@@ -3,12 +3,6 @@
 
 {% load staticfiles %}
 
-{% block head_title %}{{ page.title }}{% endblock %}
-
-{% block search %}
-{% include 'header-home-search.html' %}
-{% endblock %}
-
 {% block content %}
 	<link href="{% static 'css/dictionary.css' %}" rel="stylesheet">
 	<div class="row">
