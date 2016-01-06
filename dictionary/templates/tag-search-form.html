@@ -1,6 +1,6 @@
 <div>
 	<div class="dictionary-live-search" ng-controller="SearchRequestCtrl">
-		<form id="searchform" class="clearfix" ng-submit="search()" >
+		<form id="searchform" class="clearfix" ng-submit="search()">
 			{% csrf_token %}
 			<div class="form-group">
 				<input type="text" name="ipt-text" class="form-control" placeholder="Digite alguma palavra" autocomplete="off" ng-focus='onFocus()' ng-blur='onBlur()' ng-change="onChange()" ng-model="keyword">
@@ -9,7 +9,9 @@
 		<div class="search-result ng-hide" ng-hide="hideSearchResult">
 			<ul>
 				<li class="search-result-item" ng-repeat="word in words" ng-click="onItemClick()">
-					<a href="{% verbatim %}{{ word.relative_url }}{% endverbatim %}" class="search-item-word"><span>{% verbatim %}{{ word.word }}{% endverbatim %}</span></a>
+					<a href="{% verbatim %}{{ word.relative_url }}{% endverbatim %}" class="search-item-word">
+						<span>{% verbatim %}{{ word.word }}{% endverbatim %}</span>
+					</a>
 				</li>
 			</ul>
 		</div>
@@ -53,66 +55,68 @@
 
 
 <script>
+	nirvarisControllers.controller('SearchRequestCtrl', ['$scope', '$http', function($scope, $http, $sce) {
+		$scope.keyword = '';
+		$scope.words = [];
+		$scope.results = [];
+		$scope.hideSearchResult = true;
 
-nirvarisControllers.controller('SearchRequestCtrl', ['$scope', '$http', function ($scope, $http, $sce) {
-	$scope.keyword = '';
-	$scope.words = [];
-	$scope.results = [];
-	$scope.hideSearchResult = true;
-	
-	// only for debug
-	//$scope.words = [{"word":"sample abacate", "relative_url":"abacate"}, {"word":"sample xaxin", "relative_url":"xaxin"}];
-	//$scope.hideSearchResult = false;
-	
-	$scope.onFocus = function(){
-		if ($scope.words.length > 0) {
-			$scope.hideSearchResult = false;
-		}
-	}
-	
-	$scope.onBlur = function(){
-		if (event.relatedTarget) {
-			if (event.relatedTarget.className != 'search-item-word') {
-				$scope.hideSearchResult = true;
-			}
-		} else {
-			$scope.hideSearchResult = true;
-		}
-	}
-	
-	$scope.onItemClick = function(){
-		console.log('te');
-	}
-	
-	$scope.onChange = function(){
-		$http.post('/search', $.param({ 
-			search_input: $scope.keyword,
-			csrfmiddlewaretoken: angular.element(document.getElementsByName('csrfmiddlewaretoken')[0]).val() 
-		}), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).
-		then(function(response) {
-			$scope.words = response.data; 
-			$scope.hideSearchResult = ($scope.words.length == 0) ? true : false;
-		}, function(response) {
-			console.log("failed :(", response); 
-		});
-	}
-	
-	/* on form submit
-	$scope.search = function() {
-		$http.post('/search', $.param({ 
-			search_input: $scope.keyword,
-			csrfmiddlewaretoken: angular.element(document.getElementsByName('csrfmiddlewaretoken')[0]).val() 
-		}), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).
-		then(function(response) {
-			$scope.words = response.data; 
+		// only for debug
+		//$scope.words = [{"word":"sample abacate", "relative_url":"abacate"}, {"word":"sample xaxin", "relative_url":"xaxin"}];
+		//$scope.hideSearchResult = false;
+
+		$scope.onFocus = function() {
 			if ($scope.words.length > 0) {
 				$scope.hideSearchResult = false;
 			}
-		}, function(response) {
-			console.log("failed :(", response); 
-		});
-	};*/
+		}
 
-}]);
+		$scope.onBlur = function() {
+			if (event.relatedTarget) {
+				if (event.relatedTarget.className != 'search-item-word') {
+					$scope.hideSearchResult = true;
+				}
+			} else {
+				$scope.hideSearchResult = true;
+			}
+		}
 
+		$scope.onItemClick = function() {
+			console.log('te');
+		}
+
+		$scope.onChange = function() {
+			$http.post('/search', $.param({
+				search_input: $scope.keyword,
+				csrfmiddlewaretoken: angular.element(document.getElementsByName('csrfmiddlewaretoken')[0]).val()
+			}), {
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				}
+			}).
+			then(function(response) {
+				$scope.words = response.data;
+				$scope.hideSearchResult = ($scope.words.length == 0) ? true : false;
+			}, function(response) {
+				console.log("failed :(", response);
+			});
+		}
+
+		/* on form submit
+		$scope.search = function() {
+			$http.post('/search', $.param({
+				search_input: $scope.keyword,
+				csrfmiddlewaretoken: angular.element(document.getElementsByName('csrfmiddlewaretoken')[0]).val()
+			}), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).
+			then(function(response) {
+				$scope.words = response.data;
+				if ($scope.words.length > 0) {
+					$scope.hideSearchResult = false;
+				}
+			}, function(response) {
+				console.log("failed :(", response);
+			});
+		};*/
+
+	}]);
 </script>

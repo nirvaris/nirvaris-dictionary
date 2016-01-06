@@ -52,6 +52,10 @@ class UploadLanguageCSVView(View):
 
         f = request.FILES['file']
         file_path = os.path.join(settings.BASE_DIR,'dictionary', 'upload') + '/' +request.user.username + '.' + f.name
+
+        if not os.path.exists(os.path.dirname(file_path)):
+            os.makedirs(os.path.dirname(file_path))
+
         with open(file_path , 'wb+') as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
@@ -81,6 +85,10 @@ class UploadTagCSVView(View):
 
         f = request.FILES['file']
         file_path = os.path.join(settings.BASE_DIR,'dictionary', 'upload') + '/' +request.user.username + '.' + f.name
+
+        if not os.path.exists(os.path.dirname(file_path)):
+            os.makedirs(os.path.dirname(file_path))
+
         with open(file_path , 'wb+') as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
@@ -110,6 +118,10 @@ class UploadCSVView(View):
 
         f = request.FILES['file']
         file_path = os.path.join(settings.BASE_DIR,'dictionary', 'upload') + '/' +request.user.username + '.' + f.name
+
+        if not os.path.exists(os.path.dirname(file_path)):
+            os.makedirs(os.path.dirname(file_path))
+
         with open(file_path , 'wb+') as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
