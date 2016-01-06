@@ -28,12 +28,14 @@
 					</p>
 				</div>
 		
-				<div class="word-entry-classes">
-					<p>
-						<b>{% trans 'Classes:' %}</b>
-						{% for word_class in word_entry.word_classes.all %}{% if not forloop.first %}, {% endif %}{{ word_class.name }}{% endfor %}
-					</p>
-				</div>
+				{% if word_entry.word_classes %}
+					<div class="word-entry-classes">
+						<p>
+							<b>{% trans 'Classes:' %}</b>
+							{% for word_class in word_entry.word_classes.all %}{% if not forloop.first %}, {% endif %}{{ word_class.name }}{% endfor %}
+						</p>
+					</div>
+				{% endif %}
 		
 				<div class="word-entry-tags">
 					<p>
@@ -42,12 +44,14 @@
 					</p>
 				</div>
 		
-				<div class="word-entry-related">
-					<p>
-						<b>{% trans 'Palavras Relacionadas:' %}</b>
-						{% for word_related in word_entry.words_related.all %}{% if not forloop.first %}, {% endif %}<a href="{{ word_related.relative_url }}">{{ word_related.word }}</a>{% endfor %}
-					</p>
-				</div>
+				{% if word_entry.words_related %}
+					<div class="word-entry-related">
+						<p>
+							<b>{% trans 'Palavras Relacionadas:' %}</b>
+							{% for word_related in word_entry.words_related.all %}{% if not forloop.first %}, {% endif %}<a href="{{ word_related.relative_url }}">{{ word_related.word }}</a>{% endfor %}
+						</p>
+					</div>
+				{% endif %}
 		
 				<div class="word-entry-content">
 					{{ word_entry.word_content }}
