@@ -85,7 +85,7 @@ class UploadTagCSVView(View):
 
         f = request.FILES['file']
         file_path = os.path.join(settings.BASE_DIR,'dictionary', 'upload') + '/' +request.user.username + '.' + f.name
-
+        #pdb.set_trace()
         if not os.path.exists(os.path.dirname(file_path)):
             os.makedirs(os.path.dirname(file_path))
 

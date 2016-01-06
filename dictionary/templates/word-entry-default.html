@@ -7,7 +7,7 @@
 
 {% block content %}
 	<link href="{% static 'css/dictionary.css' %}" rel="stylesheet">
-	
+
 	<div class="word-entry">
 		<h1>{{ word_entry.word }}</h1>
 		<p class="lead">{{ word_entry.short_description }}</p>
@@ -18,16 +18,16 @@
 			<div class="word-entry-audio">{{ word_entry.phonetics }}</div>
 		{% endif %}
 		<div class="row">
-			
+
 			<div class="col-md-6">
-			
+
 				<div class="word-entry-languages">
 					<p>
 						<b>{% trans 'Línguas:' %}</b>
 						{% for language in word_entry.languages.all %}{% if not forloop.first %}, {% endif %}{{ language.name }}{% endfor %}
 					</p>
 				</div>
-		
+
 				{% if word_entry.word_classes %}
 					<div class="word-entry-classes">
 						<p>
@@ -36,14 +36,14 @@
 						</p>
 					</div>
 				{% endif %}
-		
+
 				<div class="word-entry-tags">
 					<p>
 						<b>{% trans 'Tags:' %}</b>
-						{% for tag in word_entry.tags.all %}{% if not forloop.first %}, {% endif %}<a href="/{{ tag.display }}">{{ tag.display }}</a>{% endfor %}
+						{% for tag in word_entry.tags.all %}{% if not forloop.first %}, {% endif %}<a href="{{ tag.display }}">{{ tag.display }}</a>{% endfor %}
 					</p>
 				</div>
-		
+
 				{% if word_entry.words_related %}
 					<div class="word-entry-related">
 						<p>
@@ -52,13 +52,13 @@
 						</p>
 					</div>
 				{% endif %}
-		
+
 				<div class="word-entry-content">
 					{{ word_entry.word_content }}
 				</div>
-			
+
 			</div>
-			
+
 			<div class="col-md-6">
 				{% if word_entry.word_content.pictures.all %}
 					{{ word_entry.word_content.pictures.all|horizontal_thumbs }}
