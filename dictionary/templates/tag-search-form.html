@@ -9,7 +9,7 @@
 		<div class="search-result ng-hide" ng-hide="hideSearchResult">
 			<ul>
 				<li class="search-result-item" ng-repeat="word in words" ng-click="onItemClick()">
-					<a href="{% verbatim %}{{ word.relative_url }}{% endverbatim %}" class="search-item-word">
+					<a href="{{ dictionary_url }}/{% verbatim %}{{ word.relative_url }}{% endverbatim %}" class="search-item-word">
 						<span>{% verbatim %}{{ word.word }}{% endverbatim %}</span>
 					</a>
 				</li>

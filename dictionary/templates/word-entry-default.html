@@ -26,7 +26,7 @@
 					</p>
 				</div>
 
-				{% if word_entry.word_classes %}
+				{% if word_entry.word_classes.all %}
 					<div class="word-entry-classes">
 						<p>
 							<b>{% trans 'Classes:' %}</b>
@@ -42,7 +42,7 @@
 					</p>
 				</div>
 
-				{% if word_entry.words_related %}
+				{% if word_entry.words_related.all %}
 					<div class="word-entry-related">
 						<p>
 							<b>{% trans 'Palavras Relacionadas:' %}</b>
