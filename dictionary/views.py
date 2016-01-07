@@ -187,7 +187,18 @@ class WordEntryView(View):
 
             form = CommentForm(initial=form_initial)
 
-            request_context = RequestContext(request,{'word_entry':word_entry,'form':form, 'empty_image': NV_DICTIONARY_GALLERY_EMPTY_IMAGE})
+            meta_data_locals = [
+                {
+                    'name':'description',
+                    'content':word_entry.short_description
+                },
+                {
+                    'property':'og:description',
+                    'content':word_entry.short_description
+                },
+            ]
+
+            request_context = RequestContext(request,{'word_entry':word_entry, 'title': word_entry.word,'form':form, 'meta_data_locals': meta_data_locals , 'empty_image': NV_DICTIONARY_GALLERY_EMPTY_IMAGE})
 
             return render_to_response(word_entry.template, request_context)
 
