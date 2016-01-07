@@ -86,7 +86,8 @@
 		}
 
 		$scope.onChange = function() {
-			$http.post('/search', $.param({
+			
+			$http.post("{% url 'search' %}", $.param({
 				search_input: $scope.keyword,
 				csrfmiddlewaretoken: angular.element(document.getElementsByName('csrfmiddlewaretoken')[0]).val()
 			}), {
