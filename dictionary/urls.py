@@ -16,5 +16,5 @@ urlpatterns = [
     url(r'^upload-language-csv$', login_required(UploadLanguageCSVView.as_view()), name='upload-language-csv'),
     url(r'^download-log$', login_required(DownloadImportLogView.as_view()), name='download-log'),
 
-    url(r'^(?P<tags>.*)$', WordEntryView.as_view()),
+    url(r'^(?P<tags>.*)$', WordEntryView.as_view(), name='tag-letter'),
 ]

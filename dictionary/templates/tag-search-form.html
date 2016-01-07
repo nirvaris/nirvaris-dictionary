@@ -1,3 +1,4 @@
+
 <div>
 	<div class="dictionary-live-search" ng-controller="SearchRequestCtrl">
 		<form id="searchform" class="clearfix" ng-submit="search()">
@@ -9,7 +10,7 @@
 		<div class="search-result ng-hide" ng-hide="hideSearchResult">
 			<ul>
 				<li class="search-result-item" ng-repeat="word in words" ng-click="onItemClick()">
-					<a href="{{ dictionary_url }}/{% verbatim %}{{ word.relative_url }}{% endverbatim %}" class="search-item-word">
+					<a href="{% url 'tag-letter' x %}{% verbatim %}{{ word.relative_url }}{% endverbatim %}" class="search-item-word">
 						<span>{% verbatim %}{{ word.word }}{% endverbatim %}</span>
 					</a>
 				</li>
@@ -21,32 +22,32 @@
 	<div class="dictionary-alphabetical-search">
 		<div class="dictionary-alphabetical-search-wrap">
 			<ul class="dictionary-alphabetical-search-list">
-				<li><a href="{{ dictionary_url }}/a">A</a></li>
-				<li><a href="{{ dictionary_url }}/b">B</a></li>
-				<li><a href="{{ dictionary_url }}/c">C</a></li>
-				<li><a href="{{ dictionary_url }}/d">D</a></li>
-				<li><a href="{{ dictionary_url }}/e">E</a></li>
-				<li><a href="{{ dictionary_url }}/f">F</a></li>
-				<li><a href="{{ dictionary_url }}/g">G</a></li>
-				<li><a href="{{ dictionary_url }}/h">H</a></li>
-				<li><a href="{{ dictionary_url }}/i">I</a></li>
-				<li><a href="{{ dictionary_url }}/j">J</a></li>
-				<li><a href="{{ dictionary_url }}/k">K</a></li>
-				<li><a href="{{ dictionary_url }}/l">L</a></li>
-				<li><a href="{{ dictionary_url }}/m">M</a></li>
-				<li><a href="{{ dictionary_url }}/n">N</a></li>
-				<li><a href="{{ dictionary_url }}/o">O</a></li>
-				<li><a href="{{ dictionary_url }}/p">P</a></li>
-				<li><a href="{{ dictionary_url }}/q">Q</a></li>
-				<li><a href="{{ dictionary_url }}/r">R</a></li>
-				<li><a href="{{ dictionary_url }}/s">S</a></li>
-				<li><a href="{{ dictionary_url }}/t">T</a></li>
-				<li><a href="{{ dictionary_url }}/u">U</a></li>
-				<li><a href="{{ dictionary_url }}/v">V</a></li>
-				<li><a href="{{ dictionary_url }}/w">W</a></li>
-				<li><a href="{{ dictionary_url }}/x">X</a></li>
-				<li><a href="{{ dictionary_url }}/y">Y</a></li>
-				<li><a href="{{ dictionary_url }}/z">Z</a></li>
+				<li><a href="{% url 'tag-letter' x %}a">A</a></li>
+				<li><a href="{% url 'tag-letter' x %}b">B</a></li>
+				<li><a href="{% url 'tag-letter' x %}c">C</a></li>
+				<li><a href="{% url 'tag-letter' x %}d">D</a></li>
+				<li><a href="{% url 'tag-letter' x %}e">E</a></li>
+				<li><a href="{% url 'tag-letter' x %}f">F</a></li>
+				<li><a href="{% url 'tag-letter' x %}g">G</a></li>
+				<li><a href="{% url 'tag-letter' x %}h">H</a></li>
+				<li><a href="{% url 'tag-letter' x %}i">I</a></li>
+				<li><a href="{% url 'tag-letter' x %}j">J</a></li>
+				<li><a href="{% url 'tag-letter' x %}k">K</a></li>
+				<li><a href="{% url 'tag-letter' x %}l">L</a></li>
+				<li><a href="{% url 'tag-letter' x %}m">M</a></li>
+				<li><a href="{% url 'tag-letter' x %}n">N</a></li>
+				<li><a href="{% url 'tag-letter' x %}o">O</a></li>
+				<li><a href="{% url 'tag-letter' x %}p">P</a></li>
+				<li><a href="{% url 'tag-letter' x %}q">Q</a></li>
+				<li><a href="{% url 'tag-letter' x %}r">R</a></li>
+				<li><a href="{% url 'tag-letter' x %}s">S</a></li>
+				<li><a href="{% url 'tag-letter' x %}t">T</a></li>
+				<li><a href="{% url 'tag-letter' x %}u">U</a></li>
+				<li><a href="{% url 'tag-letter' x %}v">V</a></li>
+				<li><a href="{% url 'tag-letter' x %}w">W</a></li>
+				<li><a href="{% url 'tag-letter' x %}x">X</a></li>
+				<li><a href="{% url 'tag-letter' x %}y">Y</a></li>
+				<li><a href="{% url 'tag-letter' x %}z">Z</a></li>
 			</ul>
 		</div>
 	</div>
