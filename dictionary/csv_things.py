@@ -392,7 +392,7 @@ def import_csv(request, file_path, user):
 
     os.remove(file_path)
     csv_log.close()
-    send_email('File Finished')
+    send_email('File Finished',log_file_path)
     return log_file_path
 
 def _words_related(csv_log, w_r):
@@ -510,6 +510,9 @@ def _write_on_log(csv_log, line, msg):
     #pdb.set_trace()
     csv_log.write('[' + datetime.now().strftime("%y-%m-%d %H:%M") + '] [' + _('LINE') + ' ' + str(line+1) + '] ' + msg + '\n')
 
-def send_email(html_message):
+def send_email(html_message, log_file_path):
     today_is = datetime.now().isoformat()
+
+    html_message = open(log_file_path,'r').readlines()
+
     mail_admins('[DTG] Import Finished - ' + str(today_is), '', html_message=html_message)
