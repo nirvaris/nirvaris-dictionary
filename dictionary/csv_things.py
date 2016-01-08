@@ -512,7 +512,8 @@ def _write_on_log(csv_log, line, msg):
 
 def send_email(html_message, log_file_path):
     today_is = datetime.now().isoformat()
-
-    html_message = open(log_file_path,'r').readlines()
+    with open(log_file_path,'r') as log_f:
+        for l in log_f:
+            html_message += l
 
     mail_admins('[DTG] Import Finished - ' + str(today_is), '', html_message=html_message)
