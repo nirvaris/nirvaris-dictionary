@@ -127,7 +127,7 @@ class UploadCSVView(View):
         with open(file_path , 'wb+') as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
-        pdb.set_trace()
+        #pdb.set_trace()
 
         thread = Thread(target=import_csv, args=(request, file_path, request.user,))
         thread.start()
