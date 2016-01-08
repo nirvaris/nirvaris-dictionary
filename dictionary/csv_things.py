@@ -6,6 +6,7 @@ from datetime import datetime
 from django.conf import settings
 from django.db import transaction
 from django.contrib import messages
+from django.core.mail import mail_admins
 from django.utils.translation import ugettext as _
 
 from .models import WordEntry, Tag, Language, Tag, Picture, WordContent, WordClass
@@ -25,7 +26,7 @@ DICTIONARY_CSV_FIELDS = {
     'pictures': 'IMAGENS',
     'pictures_description': 'IMAGENS DESCRICAO',
     'tags': 'TAGS'
-    
+
 }
 
 if hasattr(settings, 'DICTIONARY_CSV_FIELDS'):
@@ -34,7 +35,7 @@ if hasattr(settings, 'DICTIONARY_CSV_FIELDS'):
 
 TAG_CSV_FIELDS = {
     'name': 'NAME',
-    'display': 'DISPLAY'    
+    'display': 'DISPLAY'
 }
 
 if hasattr(settings, 'TAG_CSV_FIELDS'):
@@ -43,7 +44,7 @@ if hasattr(settings, 'TAG_CSV_FIELDS'):
 
 LANGUAGE_CSV_FIELDS = {
     'name': 'NAME',
-    'location': 'LOCATION'    
+    'location': 'LOCATION'
 }
 
 if hasattr(settings, 'LANGUAGE_CSV_FIELDS'):
@@ -54,19 +55,19 @@ class CSVImportException(Exception):
     def __init__(self, value):
         self.value = value
     def __str__(self):
-        return repr(self.value)  
+        return repr(self.value)
 
 
 def export_csv(request):
     ...
 
 def import_language_csv(request, file_path):
-    
+
     is_to_commit = True
     log_file_path = file_path + '.log'
     csv_log = open(log_file_path, 'w')
     language_saved = 0
-    
+
     _write_on_log(csv_log, 0, _('success upload - starting reading'))
     try:
 
@@ -106,7 +107,7 @@ def import_language_csv(request, file_path):
                     except:
                         is_to_commit = False
                         _write_on_log(csv_log, line, _('[ERROR CODE 9000] Unexpected error: ') + str(sys.exc_info()[1]))
-                        
+
                 if not is_to_commit:
                     raise CSVImportException('[ERROR CODE 9000] Errors have happened. Transaction was canceled.')
 
@@ -118,31 +119,31 @@ def import_language_csv(request, file_path):
         _write_on_log(csv_log, line, csv_excp.value)
     except:
         is_to_commit = False
-        _write_on_log(csv_log, line, _('[ERROR CODE 9010] Unexpected error: message: ') + str(sys.exc_info()[1]))        
-    
+        _write_on_log(csv_log, line, _('[ERROR CODE 9010] Unexpected error: message: ') + str(sys.exc_info()[1]))
+
     #pdb.set_trace()
-    
+
     if is_to_commit:
         messages.success(request, _('File uploaded with success. Check the log for more details.'))
         _write_on_log(csv_log, line, _('[SUCCESS] The file was saved. Total of tags saved: ' + str(language_saved)))
     else:
         messages.error(request, _('All process were canceled. File uploaded with ERRORS. Check the log for more details.'))
 
-        
+
     os.remove(file_path)
     csv_log.close()
     return log_file_path
 
 def import_tag_csv(request, file_path):
-    
+
     is_to_commit = True
     log_file_path = file_path + '.log'
     csv_log = open(log_file_path, 'w')
     tag_saved = 0
-    
+
     regex = '[\.\\\\\&\?\(\)\<\>\/\@\!\$\#\£\€\§\±\*\^\%\:\;\`\~\,\\\'\\"\[\]\{\}\+éáíóúâêîôûàèìòùãõñçü].+'
-    
-    
+
+
     _write_on_log(csv_log, 0, _('success upload - starting reading'))
     try:
 
@@ -154,7 +155,7 @@ def import_tag_csv(request, file_path):
             header = _find_header(csv_log, csv_reader, TAG_CSV_FIELDS)
             if not header:
                 raise CSVImportException(_('[ERROR CODE 1002] Header not found. All process was cancelled.'))
-                            
+
             _write_on_log(csv_log, header['line'], _('Header found'))
             with transaction.atomic():
                 for row in csv_reader:
@@ -169,7 +170,7 @@ def import_tag_csv(request, file_path):
                         if row_empty:
                             _write_on_log(csv_log, line, _('[ROW EMPTY]'))
                             continue
-                                                    
+
                         name_lower = row[header['name']].lower()
                         if re.search(re.compile(regex),name_lower):
                             is_to_commit = False
@@ -187,7 +188,7 @@ def import_tag_csv(request, file_path):
                     except:
                         is_to_commit = False
                         _write_on_log(csv_log, line, _('[ERROR CODE 9000] Unexpected error: ') + str(sys.exc_info()[1]))
-                        
+
                 if not is_to_commit:
                     raise CSVImportException('[ERROR CODE 9000] Errors have happened. Transaction was canceled.')
 
@@ -197,17 +198,17 @@ def import_tag_csv(request, file_path):
         _write_on_log(csv_log, line, csv_excp.value)
     except:
         is_to_commit = False
-        _write_on_log(csv_log, line, _('[ERROR CODE 9010] Unexpected error: message: ') + str(sys.exc_info()[1]))        
-    
+        _write_on_log(csv_log, line, _('[ERROR CODE 9010] Unexpected error: message: ') + str(sys.exc_info()[1]))
+
     #pdb.set_trace()
-    
+
     if is_to_commit:
         messages.success(request, _('File uploaded with success. Check the log for more details.'))
         _write_on_log(csv_log, line, _('[SUCCESS] The file was saved. Total of tags saved: ' + str(tag_saved)))
     else:
         messages.error(request, _('All process were canceled. File uploaded with ERRORS. Check the log for more details.'))
 
-        
+
     os.remove(file_path)
     csv_log.close()
     return log_file_path
@@ -222,7 +223,7 @@ def import_csv(request, file_path, user):
     w_r = {}
     _write_on_log(csv_log, 0, _('success upload - starting reading'))
     try:
-        
+
         with open(file_path, encoding='latin-1') as csvfile:
             csv_reader = csv.reader(csvfile, delimiter=',', quotechar='"')
             line = 0
@@ -231,7 +232,7 @@ def import_csv(request, file_path, user):
             header = _find_header(csv_log, csv_reader, DICTIONARY_CSV_FIELDS)
             if not header:
                 raise CSVImportException(_('[ERROR CODE 1002] Header not found. All process was cancelled.'))
-                
+
             _write_on_log(csv_log, header['line'], _('Header found'))
             with transaction.atomic():
                 for row in csv_reader:
@@ -247,10 +248,10 @@ def import_csv(request, file_path, user):
                             _write_on_log(csv_log, line, _('[ROW EMPTY]'))
                             continue
 
-                        
+
                         # FOR THE CONTENT
                         word_content = None
-                        if row[header['content_id']].isdigit() and WordContent.objects.filter(id=row[header['content_id']]).exists(): 
+                        if row[header['content_id']].isdigit() and WordContent.objects.filter(id=row[header['content_id']]).exists():
                             if row[header['content']].split()=='':
                                 _write_on_log(csv_log, line, _('[ERROR CODE 1016] CONTENT ID was found but content is blank.'))
                                 is_to_commit = False
@@ -272,9 +273,9 @@ def import_csv(request, file_path, user):
                                 word_content.content = row[header['content']]
                                 word_content.save()
 
-                                 
+
                         # FOR THE WORD
-                        if row[header['id']].isdigit() and WordEntry.objects.filter(id=row[header['id']]).exists(): 
+                        if row[header['id']].isdigit() and WordEntry.objects.filter(id=row[header['id']]).exists():
                             word_entry = WordEntry.objects.get(id=row[header['id']])
                             if word_entry.relative_url != row[header['relative_url']]:
                                 _write_on_log(csv_log, line, _('[ERROR CODE 1000] ID and relative_url does not match.'))
@@ -288,19 +289,19 @@ def import_csv(request, file_path, user):
                             if WordEntry.objects.filter(relative_url=row[header['relative_url']]).exists():
                                 _write_on_log(csv_log, line, _('[ERROR CODE 1003] URL already exists: ' + row[header['relative_url']]))
                                 is_to_commit = False
-                                continue                            
+                                continue
                             word_entry = WordEntry()
 
                         word_entry.author = user
                         word_entry.relative_url = row[header['relative_url']]
                         word_entry.word = row[header['word']]
-                        
+
                         if row[header['audio_file']] != '':
                             word_entry.audio_file = row[header['audio_file']]
-                        
+
                         if row[header['phonetics']] != '':
                             word_entry.phonetics = row[header['phonetics']]
-                        
+
                         word_entry.short_description = row[header['short_description']]
                         word_entry.is_published = False
                         word_entry.word_content = word_content
@@ -313,14 +314,14 @@ def import_csv(request, file_path, user):
                         else:
                             word_entry.save()
 
-                        # FOR LANGUAGES 
+                        # FOR LANGUAGES
                         if not _save_many_to_many_field(csv_log, line, word_entry.languages, Language, DICTIONARY_CSV_FIELDS['languages'], row[header['languages']], False):
                             is_to_commit = False
                             continue
                         else:
                             word_entry.save()
 
-                        # FOR WORD CLASSES 
+                        # FOR WORD CLASSES
                         if not _save_many_to_many_field(csv_log, line, word_entry.word_classes, WordClass, DICTIONARY_CSV_FIELDS['word_classes'], row[header['word_classes']], True):
                             is_to_commit = False
                             continue
@@ -330,7 +331,7 @@ def import_csv(request, file_path, user):
                         #pictures
                         for pc_delete in word_content.pictures.all():
                             pc_delete.delete()
-                            
+
                         if row[header['pictures']] != '':
                             pictures = row[header['pictures']].replace('\'','').split(',')
                             descriptions = None
@@ -360,15 +361,15 @@ def import_csv(request, file_path, user):
                             words_related = row[header['words_related']].split(',')
                             for word_related in words_related:
                                 w_r[row[header['relative_url']]].append(word_related)
-                        
+
                         word_saved += 1
 
                     except:
                         is_to_commit = False
                         _write_on_log(csv_log, line, _('[ERROR CODE 9000] Unexpected error saving word entry: message: ') + str(sys.exc_info()[1]))
-                
+
                 _words_related(csv_log, w_r)
-                
+
                 if not is_to_commit:
                     raise CSVImportException('[ERROR CODE 9000] Errors have happened. Transaction was canceled. No data was saved.')
 
@@ -378,7 +379,7 @@ def import_csv(request, file_path, user):
         _write_on_log(csv_log, line, csv_excp.value)
     except:
         is_to_commit = False
-        _write_on_log(csv_log, line, _('[ERROR CODE 9010] Unexpected error: message: ') + str(sys.exc_info()[1]))        
+        _write_on_log(csv_log, line, _('[ERROR CODE 9010] Unexpected error: message: ') + str(sys.exc_info()[1]))
 
     #pdb.set_trace()
 
@@ -391,10 +392,11 @@ def import_csv(request, file_path, user):
 
     os.remove(file_path)
     csv_log.close()
+    send_email('File Finished')
     return log_file_path
 
 def _words_related(csv_log, w_r):
-    
+
     _write_on_log(csv_log, 0, _('Add related words'))
     not_found = ''
     for key, related in w_r.items():
@@ -411,27 +413,27 @@ def _words_related(csv_log, w_r):
 
 def _save_words_related(csv_log, line, word_entry,  field_csv_value):
 
-    
+
     field_csv_value = field_csv_value.strip()
-    
+
     if field_csv_value == '':
         return True
 
     field_values = field_csv_value.split(',')
-    
+
     word_entry.words_related.clear()
     field_value_not_exists = False
-    
+
     for field_value in field_values:
-        
+
         field_value = field_value.strip().lower()
-        
+
         if not WordEntry.objects.filter(relative_url__iexact=field_value).exists():
             _write_on_log(csv_log, line, _('[ERROR CODE 1009] relative_url does not exist: ' + field_value))
             field_value_not_exists = True
         else:
             word_entry.words_related.add(WordEntry.objects.get(relative_url__iexact=field_value))
-    
+
     if field_value_not_exists:
         return False
 
@@ -439,9 +441,9 @@ def _save_words_related(csv_log, line, word_entry,  field_csv_value):
 
 def _save_many_to_many_field(csv_log, line, word_entry_list, fieldClass,header, field_csv_value, can_be_empty):
 
-    
+
     field_csv_value = field_csv_value.strip()
-    
+
     if field_csv_value == '':
         if can_be_empty:
             return True;
@@ -450,33 +452,33 @@ def _save_many_to_many_field(csv_log, line, word_entry_list, fieldClass,header, 
             return False
 
     field_values = field_csv_value.split(',')
-    
+
     word_entry_list.clear()
     field_value_not_exists = False
-    
+
     for field_value in field_values:
-        
+
         field_value = field_value.strip().lower()
-        
+
         if not fieldClass.objects.filter(name__iexact=field_value).exists():
             _write_on_log(csv_log, line, _('[ERROR CODE 1009] ' + header + ' does not exist: ' + field_value))
             field_value_not_exists = True
         else:
             word_entry_list.add(fieldClass.objects.get(name__iexact=field_value))
-    
+
     if field_value_not_exists:
         return False
 
     return True
 
 def _find_header(csv_log, csv_reader, CSV_FIELDS):
-    
+
     header = {}
     try:
         line = 0
         #pdb.set_trace()
         for row in csv_reader:
-            
+
             header_log = ''
             found_some_header = False
             header_found = True
@@ -487,17 +489,17 @@ def _find_header(csv_log, csv_reader, CSV_FIELDS):
                 else:
                     found_some_header = True
                     header[key] = row.index(column)
-            
+
             if found_some_header:
                 break
             line += 1
-            
+
         if not header_found:
             _write_on_log(csv_log, line, _('[ERROR CODE 1002] Header not found: ' + header_log.strip()))
     except:
         header_found = False
         _write_on_log(csv_log, line,_('[ERROR CODE 1002] Header not found. All process was cancelled.'))
-    
+
     if not header_found:
         return None
     else:
@@ -507,5 +509,7 @@ def _find_header(csv_log, csv_reader, CSV_FIELDS):
 def _write_on_log(csv_log, line, msg):
     #pdb.set_trace()
     csv_log.write('[' + datetime.now().strftime("%y-%m-%d %H:%M") + '] [' + _('LINE') + ' ' + str(line+1) + '] ' + msg + '\n')
-    
-  
+
+def send_email(html_message):
+    today_is = datetime.now().isoformat()
+    mail_admins('[DTG] Import Finished - ' + str(today_is), '', html_message=html_message)

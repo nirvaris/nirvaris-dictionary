@@ -1,6 +1,8 @@
 import os
 import pdb
 
+from threading import Thread
+
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Q
@@ -125,10 +127,13 @@ class UploadCSVView(View):
         with open(file_path , 'wb+') as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
+        pdb.set_trace()
 
-        log_file_path = import_csv(request, file_path, request.user)
+        thread = Thread(target=import_csv, args=(request, file_path, request.user,))
+        thread.start()
+        #log_file_path = import_csv(request, file_path, request.user)
 
-        request.session['log_file_path'] = log_file_path
+        request.session['log_file_path'] = 'log_file_path'
 
         form = UploadCSVForm()
         request_context = RequestContext(request,{'upload_form':form,'log_link':'download_log', 'mapped_fields': DICTIONARY_CSV_FIELDS})
