@@ -106,6 +106,7 @@ class UploadTagCSVView(View):
 class UploadCSVView(View):
 
     def get(self, request):
+        print('upload-view')
         form = UploadCSVForm()
         request_context = RequestContext(request,{'upload_form':form, 'mapped_fields': DICTIONARY_CSV_FIELDS})
         return render_to_response('upload-csv-form.html', request_context)
