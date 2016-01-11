@@ -216,6 +216,8 @@ def import_tag_csv(request, file_path):
 
 def import_csv(request, file_path, user):
 
+
+    print('start import csv')
     is_to_commit = True
     log_file_path = file_path + '.log'
     csv_log = open(log_file_path, 'w')
@@ -352,7 +354,6 @@ def import_csv(request, file_path, user):
 
                             word_entry.save()
 
-
                         else:
                             word_entry.save()
 
@@ -365,6 +366,7 @@ def import_csv(request, file_path, user):
                         word_saved += 1
 
                     except:
+                        print(str(sys.exc_info()[1]))
                         is_to_commit = False
                         _write_on_log(csv_log, line, _('[ERROR CODE 9000] Unexpected error saving word entry: message: ') + str(sys.exc_info()[1]))
 
@@ -375,10 +377,12 @@ def import_csv(request, file_path, user):
 
     except CSVImportException as csv_excp:
         #pdb.set_trace()
+        print(str(sys.exc_info()[1]))
         is_to_commit = False
         _write_on_log(csv_log, line, csv_excp.value)
     except:
         is_to_commit = False
+        print(str(sys.exc_info()[1]))
         _write_on_log(csv_log, line, _('[ERROR CODE 9010] Unexpected error: message: ') + str(sys.exc_info()[1]))
 
     #pdb.set_trace()
@@ -389,7 +393,7 @@ def import_csv(request, file_path, user):
     else:
         messages.error(request, _('All process were canceled. File uploaded with ERRORS. Check the log for more details.'))
 
-
+    print('finished import csv')
     os.remove(file_path)
     csv_log.close()
     send_email('File Finished',log_file_path)
