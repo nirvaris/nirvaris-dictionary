@@ -25,7 +25,14 @@ NV_DICTIONARY_GALLERY_EMPTY_IMAGE = 'static/image/empty-image.jpg'
 
 if hasattr(settings, 'NV_THEME_GALLERY_EMPTY_IMAGE'):
     if settings.NV_THEME_GALLERY_EMPTY_IMAGE:
-        NV_THEME_GALLERY_EMPTY_IMAGE = settings.NV_THEME_GALLERY_EMPTY_IMAGE
+        NV_DICTIONARY_GALLERY_EMPTY_IMAGE = settings.NV_THEME_GALLERY_EMPTY_IMAGE
+        
+        
+NV_THEME_GALLERY_IMAGES = 'static/gallery/'
+
+if hasattr(settings, 'NV_THEME_GALLERY_IMAGES'):
+    if settings.NV_THEME_GALLERY_IMAGES:
+        NV_THEME_GALLERY_IMAGES = settings.NV_THEME_GALLERY_IMAGES
 
 class DownloadImportLogView(View):
 
@@ -217,7 +224,7 @@ class WordEntryView(View):
         else:
             word_entries = WordEntry.objects.all()
 
-        request_context = RequestContext(request,{'word_entries':word_entries})
+        request_context = RequestContext(request,{'word_entries':word_entries, 'gallery_images': NV_THEME_GALLERY_IMAGES})
 
         return render_to_response('word-entries-tags.html', request_context)
 

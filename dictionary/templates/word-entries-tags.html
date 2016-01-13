@@ -1,7 +1,7 @@
 {% extends "theme-base.html" %}
 {% load i18n %}
-
 {% load staticfiles %}
+{% load template_filters %}
 
 {% block content %}
 
@@ -14,8 +14,7 @@
 							<li>
 								<a href="{{ word_entry.relative_url }}">
 									<div class="word-thumb">
-										<!--<img src="{% static 'image/fav.png' %}">-->
-										<img src="http://placehold.it/90x90">
+										<img class="word-thumb" src="{{ gallery_images }}{{ word_entry.thumb }}" height="90" width="90">
 									</div>
 									<div class="word-text">
 										<h3>{{ word_entry.word }}</h3>
@@ -29,4 +28,5 @@
 			</div>
 		</div>
 	</div>
+	
 {% endblock %}

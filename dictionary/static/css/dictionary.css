@@ -63,7 +63,8 @@
 .dictionary-word-list li {
 	display: block;
 	overflow: hidden;
-	margin-bottom: 15px;
+	padding: 20px 0;
+	border-bottom: 1px solid #edefed;
 }
 .dictionary-word-list .word-thumb {
 	float: left;
@@ -74,7 +75,9 @@
 	float: left;
 }
 
-
 .word-entry .row {
 	margin-top: 50px;
+}
+.word-entry .row > div:first-child {
+	padding-right: 50px;
 }
