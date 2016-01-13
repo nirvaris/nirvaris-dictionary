@@ -36,7 +36,7 @@ admin.site.register(WordContent, WordContentAdmin)
 class PictureAdmin(admin.ModelAdmin):
     search_fields = ['file_name, description']
 
-admin.site.register(Picture)
+admin.site.register(Picture,PictureAdmin)
 
 admin.site.register(Language)
 
