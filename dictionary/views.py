@@ -168,7 +168,7 @@ class SearchView(View):
                 q_obj &= Q(word__icontains=keyword) | Q(short_description__icontains=keyword) | Q(word_content__content__icontains=keyword)
 
             #pdb.set_trace()
-            word_entries = WordEntry.objects.filter(q_obj)
+            word_entries = WordEntry.objects.filter(is_published=True).filter(q_obj)
 
         request_context = RequestContext(request,{'word_entries':word_entries})
         return render_to_response('search-result.html', request_context)
