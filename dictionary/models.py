@@ -62,7 +62,7 @@ class WordEntry(models.Model):
     
     def thumb(self):
         if self.word_content.pictures.order_by('display_order').first():
-            return self.word_content.pictures.order_by('display_order').first().file_name.replace('.', '_tinny.')
+            return word_entry.word_content.pictures.order_by('display_order').first().file_name.replace('.', '_tinny.')
         return 'no_image_tinny.png'
 
     def __str__(self):

@@ -75,6 +75,25 @@
 	float: left;
 }
 
+
+.word-entry h1 {
+	color: #055b01;
+	font-size: 40px;
+	margin-bottom: 22px;
+}
+.word-entry .lead {
+	color: #8f8f8f;
+	font-size: 22px;
+	line-height: 26px;
+}
+.word-entry hr {
+    margin-top: 24px;
+    margin-bottom: 24px;
+	border-top-color: #e6f1da;
+}
+.word-entry p {
+	margin: 0 0 14px;
+}
 .word-entry .row {
 	margin-top: 50px;
 }

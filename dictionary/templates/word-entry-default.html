@@ -7,17 +7,24 @@
 
 
 	<div class="word-entry">
-		<h1>{{ word_entry.word }}</h1>
-		<p class="lead">{{ word_entry.short_description }}</p>
-		{% if word_entry.audio_file %}
-			<div class="word-entry-audio">{{ word_entry.audio_file }}</div>
-		{% endif %}
-		{% if word_entry.phonetics %}
-			<div class="word-entry-audio">{{ word_entry.phonetics }}</div>
-		{% endif %}
+		
 		<div class="row">
 
 			<div class="col-md-6">
+				
+				<h1>{{ word_entry.word }}</h1>
+				
+				<p class="lead">{{ word_entry.short_description }}</p>
+				
+				<hr/>
+				
+				{% if word_entry.audio_file %}
+					<div class="word-entry-audio">{{ word_entry.audio_file }}</div>
+				{% endif %}
+				
+				{% if word_entry.phonetics %}
+					<div class="word-entry-audio">{{ word_entry.phonetics }}</div>
+				{% endif %}
 
 				<div class="word-entry-languages">
 					<p>
@@ -59,7 +66,7 @@
 
 			<div class="col-md-6">
 				{% if word_entry.word_content.pictures.all %}
-					{{ word_entry.word_content.pictures.all|horizontal_thumbs }}
+					{{ word_entry.word_content.pictures.all|vertical_thumbs }}
 				{% else %}
 					<img src="{{ empty_image }}">
 				{% endif %}
