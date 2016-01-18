@@ -59,10 +59,10 @@ class WordEntry(models.Model):
     words_related = models.ManyToManyField('WordEntry', related_name='word_related_to')
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
-    
+
     def thumb(self):
         if self.word_content.pictures.order_by('display_order').first():
-            return word_entry.word_content.pictures.order_by('display_order').first().file_name.replace('.', '_tinny.')
+            return self.word_content.pictures.order_by('display_order').first().file_name.replace('.', '_tinny.')
         return 'no_image_tinny.png'
 
     def __str__(self):
