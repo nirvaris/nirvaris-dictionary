@@ -64,15 +64,34 @@
 	display: block;
 	overflow: hidden;
 	padding: 20px 0;
-	border-bottom: 1px solid #edefed;
+    width: 45%;
+    float: left;
+	border-bottom: 1px solid #F3F3F4;
+	transition: all 200ms;
+	-webkit-transition: all 200ms;
+}
+.dictionary-word-list li:hover {
+	background-color: #F7F7F7;
+}
+.dictionary-word-list li:nth-child(odd) {
+    margin-right: 20px;
 }
 .dictionary-word-list .word-thumb {
 	float: left;
 	display: block;
-	margin-right: 20px;
+	margin: 0 10px;
 }
 .dictionary-word-list .word-text {
+	width: 70%;
 	float: left;
+}
+.dictionary-word-list .word-text h3 {
+	margin-top: 3px;
+}
+.dictionary-word-list .word-text p {
+	color: #A2A2A2;
+	font-size: 14px;
+	font-weight: 300
 }
 
 

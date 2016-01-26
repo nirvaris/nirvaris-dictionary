@@ -19,7 +19,7 @@
 									</div>
 									<div class="word-text">
 										<h3>{{ word_entry.word }}</h3>
-										<p>{{ word_entry.short_description }}</p>
+										<p>{{ word_entry.short_description|truncatechars:90 }}</p>
 									</div>
 								</a>
 							</li>
