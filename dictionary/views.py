@@ -26,8 +26,8 @@ NV_DICTIONARY_GALLERY_EMPTY_IMAGE = 'static/image/empty-image.jpg'
 if hasattr(settings, 'NV_THEME_GALLERY_EMPTY_IMAGE'):
     if settings.NV_THEME_GALLERY_EMPTY_IMAGE:
         NV_DICTIONARY_GALLERY_EMPTY_IMAGE = settings.NV_THEME_GALLERY_EMPTY_IMAGE
-        
-        
+
+
 NV_THEME_GALLERY_IMAGES = 'static/gallery/'
 
 if hasattr(settings, 'NV_THEME_GALLERY_IMAGES'):
@@ -159,6 +159,7 @@ class SearchView(View):
         return render_to_response('search-form-get.html', request_context)
 
     def post(self, request):
+        pdb.set_trace()
         form = SearchForm(request.POST)
 
         form_valid = form.is_valid()
@@ -218,11 +219,11 @@ class WordEntryView(View):
         #pdb.set_trace()
 
         if tag_list[0]!='':
-            word_entries = WordEntry.objects.filter(tags__name__iexact=tag_list.pop(0))
+            word_entries = WordEntry.objects.filter(is_published=True, tags__name__iexact=tag_list.pop(0))
             for tag in tag_list:
-                word_entries = word_entries.filter(tags__name__iexact=tag)
+                word_entries = word_entries.filter(is_published=True, tags__name__iexact=tag)
         else:
-            word_entries = WordEntry.objects.all()
+            word_entries = WordEntry.objects.filter(is_published=True)
 
         request_context = RequestContext(request,{'word_entries':word_entries, 'gallery_images': NV_THEME_GALLERY_IMAGES})
 
