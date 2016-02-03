@@ -159,7 +159,7 @@ class SearchView(View):
         return render_to_response('search-form-get.html', request_context)
 
     def post(self, request):
-        pdb.set_trace()
+        #pdb.set_trace()
         form = SearchForm(request.POST)
 
         form_valid = form.is_valid()
