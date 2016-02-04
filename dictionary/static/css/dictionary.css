@@ -23,9 +23,10 @@
     padding: 7px 14px 7px 14px;
     display: block;
     color: #595959;
+	-webkit-transition: background 200ms linear;
 }
 .search-result-item a:hover {
-	background: #fafafa;
+	background: #f5f5f5;
 }
 
 
