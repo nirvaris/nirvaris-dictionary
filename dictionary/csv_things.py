@@ -171,7 +171,7 @@ def import_tag_csv(request, file_path):
                             _write_on_log(csv_log, line, _('[ROW EMPTY]'))
                             continue
 
-                        name_lower = row[header['name']].lower()
+                        name_lower = row[header['name']].lower().strip()
                         if re.search(re.compile(regex),name_lower):
                             is_to_commit = False
                             _write_on_log(csv_log, line, _('[ERROR CODE 1100] Invalid character for tag name.'))
@@ -179,9 +179,9 @@ def import_tag_csv(request, file_path):
                         #pdb.set_trace()
                         if Tag.objects.filter(name__iexact=name_lower).exists():
                             tag = Tag.objects.get(name__iexact=name_lower)
-                            tag.display = row[header['display']]
+                            tag.display = row[header['display']].strip()
                         else:
-                            tag = Tag(name=name_lower,display=row[header['display']])
+                            tag = Tag(name=name_lower,display=row[header['display']].strip())
                         tag.save()
                         tag_saved += 1
 
@@ -279,7 +279,7 @@ def import_csv(request, file_path, user):
                         # FOR THE WORD
                         if row[header['id']].isdigit() and WordEntry.objects.filter(id=row[header['id']]).exists():
                             word_entry = WordEntry.objects.get(id=row[header['id']])
-                            if word_entry.relative_url != row[header['relative_url']]:
+                            if word_entry.relative_url != row[header['relative_url']].strip():
                                 _write_on_log(csv_log, line, _('[ERROR CODE 1000] ID and relative_url does not match.'))
                                 is_to_commit = False
                                 continue
@@ -288,23 +288,23 @@ def import_csv(request, file_path, user):
                                 _write_on_log(csv_log, line, _('[ERROR CODE 1001] ID not found.'))
                                 is_to_commit = False
                                 continue
-                            if WordEntry.objects.filter(relative_url=row[header['relative_url']]).exists():
+                            if WordEntry.objects.filter(relative_url=row[header['relative_url']].strip()).exists():
                                 _write_on_log(csv_log, line, _('[ERROR CODE 1003] URL already exists: ' + row[header['relative_url']]))
                                 is_to_commit = False
                                 continue
                             word_entry = WordEntry()
 
                         word_entry.author = user
-                        word_entry.relative_url = row[header['relative_url']]
-                        word_entry.word = row[header['word']]
+                        word_entry.relative_url = row[header['relative_url']].strip()
+                        word_entry.word = row[header['word']].strip()
 
                         if row[header['audio_file']] != '':
-                            word_entry.audio_file = row[header['audio_file']]
+                            word_entry.audio_file = row[header['audio_file']].strip()
 
                         if row[header['phonetics']] != '':
-                            word_entry.phonetics = row[header['phonetics']]
+                            word_entry.phonetics = row[header['phonetics']].strip()
 
-                        word_entry.short_description = row[header['short_description']]
+                        word_entry.short_description = row[header['short_description']].strip()
                         word_entry.is_published = False
                         word_entry.word_content = word_content
                         word_entry.save()
@@ -348,7 +348,7 @@ def import_csv(request, file_path, user):
                                         desc_to_use = descriptions[nu_order]
                                     except:
                                         pass
-                                pic = Picture(word_content=word_content,file_name=picture.strip(), description=desc_to_use, display_order=nu_order)
+                                pic = Picture(word_content=word_content,file_name=picture.strip(), description=desc_to_use.strip(), display_order=nu_order)
                                 pic.save()
                                 nu_order += 1;
 
@@ -361,7 +361,7 @@ def import_csv(request, file_path, user):
                             w_r[row[header['relative_url']]] = []
                             words_related = row[header['words_related']].split(',')
                             for word_related in words_related:
-                                w_r[row[header['relative_url']]].append(word_related)
+                                w_r[row[header['relative_url']]].append(word_related.strip())
 
                         word_saved += 1
 

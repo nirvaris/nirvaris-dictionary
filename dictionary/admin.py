@@ -10,7 +10,7 @@ make_published.short_description = "Mark selected as published"
 class WordEntryAdmin(admin.ModelAdmin):
     list_filter = ('languages','word_classes','words_related','tags','author','template')
     list_display = ('word','relative_url','short_description','is_published','phonetics','audio_file','template','access_count','created','word_content')
-    search_fields = ['word','relative_url','short_description','word_content']
+    search_fields = ['word','relative_url','short_description','word_content__content']
     list_editable = ('is_published',)
     actions = [make_published]
 
