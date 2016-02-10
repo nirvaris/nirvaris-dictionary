@@ -16,7 +16,7 @@
 				
 				<h1>{{ word_entry.word }}</h1>
 				
-				<p class="lead">{{ word_entry.short_description }}</p>
+				<p class="lead">{{ word_entry.short_description|safe }}</p>
 				
 				<hr/>
 				
@@ -61,7 +61,7 @@
 				{% endif %}
 
 				<div class="word-entry-content">
-					{{ word_entry.word_content }}
+					{{ word_entry.word_content|safe }}
 				</div>
 
 			</div>
