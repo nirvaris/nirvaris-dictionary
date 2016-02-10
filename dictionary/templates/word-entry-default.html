@@ -47,7 +47,7 @@
 				<div class="word-entry-tags">
 					<p>
 						<b>{% trans 'Tags:' %}</b>
-						{% for tag in word_entry.tags.all %}{% if not forloop.first %}, {% endif %}<a href="{{ tag.display }}">{{ tag.display }}</a>{% endfor %}
+						{% for tag in word_entry.tags.all %}{% if not forloop.first %}, {% endif %}<a href="{{ tag.name }}">{{ tag.display }}</a>{% endfor %}
 					</p>
 				</div>
 
