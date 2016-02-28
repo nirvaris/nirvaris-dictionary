@@ -55,8 +55,8 @@ class WordEntry(models.Model):
     template = models.CharField(max_length=50, null=False, default='word-entry-default.html')
     is_published = models.BooleanField(default=False)
     access_count = models.BigIntegerField(default=0, null=False)
-    word_content = models.ForeignKey(WordContent, related_name='word_entries',null=True)
-    words_related = models.ManyToManyField('WordEntry', related_name='word_related_to')
+    word_content = models.ForeignKey(WordContent, related_name='word_entries',null=True, blank=True)
+    words_related = models.ManyToManyField('WordEntry', blank=True, related_name='word_related_to')
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 
@@ -70,7 +70,8 @@ class WordEntry(models.Model):
 
 
 class Comment(models.Model):
-    author = models.ForeignKey(User, null=True, related_name='word_entry_comments')
+    author = models.ForeignKey(User, null=True, blank=True, related_name='word_entry_comments')
+    author_ip = models.GenericIPAddressField(null=True, blank=True)
     word_entry = models.ForeignKey(WordEntry, related_name='word_entry_comments')
     content = models.TextField()
     created = models.DateTimeField(auto_now_add=True)

@@ -19,7 +19,8 @@ class CommentForm(forms.ModelForm):
     name = forms.CharField(required=False, label=_('Name'), max_length=200)
     email = forms.EmailField(required=False, label=_('Email'), max_length=200)
     word_entry_id = forms.CharField(required=True, widget=forms.HiddenInput())
-    
+    author_ip = forms.GenericIPAddressField(required=False, widget=forms.HiddenInput())
+
     class Meta:
         model = Comment
         fields =[
@@ -27,7 +28,7 @@ class CommentForm(forms.ModelForm):
         ]
 
     def clean(self):
-        
+
         cleaned_data = super(CommentForm, self).clean()
         name = ''
         email = ''
@@ -36,12 +37,12 @@ class CommentForm(forms.ModelForm):
             email = cleaned_data['email']
         except:
             pass
-        
+
         if name != '' or email != '':
             if name == '' or email == '':
                 self.add_error('name',_('You have to inform both, email and name, otherwise, leave both blank.'))
                 return cleaned_data
-        
+
         if email != '':
             if User.objects.filter(email=email).exists():
                 self.instance.author = User.objects.get(email=email)
@@ -57,11 +58,12 @@ class CommentForm(forms.ModelForm):
         self.instance.word_entry_id = cleaned_data['word_entry_id']
 
         return cleaned_data
-    
+
     def save(self, commit=True):
-        
+
         if commit:
             if self.instance.author:
                 self.instance.author.save()
             self.instance.save()
-        
+
+        return self.instance

@@ -1,5 +1,5 @@
 import os
-#import pdb
+import pdb
 
 from threading import Thread
 
@@ -212,7 +212,7 @@ class WordEntryView(View):
                 },
             ]
 
-            request_context = RequestContext(request,{'word_entry':word_entry, 'title': word_entry.word,'form':form, 'meta_data_locals': meta_data_locals , 'empty_image': NV_DICTIONARY_GALLERY_EMPTY_IMAGE})
+            request_context = RequestContext(request,{'word_entry':word_entry, 'title': word_entry.word,'comment_form':form, 'meta_data_locals': meta_data_locals , 'empty_image': NV_DICTIONARY_GALLERY_EMPTY_IMAGE})
 
             return render_to_response(word_entry.template, request_context)
 
@@ -231,17 +231,20 @@ class WordEntryView(View):
 
     def post(self, request, tags):
 
+        #pdb.set_trace()
         form = CommentForm(request.POST)
-
         form_valid = form.is_valid()
         cleaned_data = form.clean()
 
         word_entry = WordEntry.objects.get(id=cleaned_data['word_entry_id'])
-
+        #pdb.set_trace()
         if form_valid:
-            form.save()
-            form = CommentForm(initial={'word_entry_id': word_entry_id.id})
 
-        request_context = RequestContext(request,{'word_entry':word_entry,'form':form, 'empty_image': NV_DICTIONARY_GALLERY_EMPTY_IMAGE})
+            comment = form.save()
+            comment.author_ip = request.META['REMOTE_ADDR']
+            comment.save()
+            form = CommentForm(initial={'word_entry_id': word_entry.id})
+
+        request_context = RequestContext(request,{'word_entry':word_entry,'comment_form':form, 'empty_image': NV_DICTIONARY_GALLERY_EMPTY_IMAGE})
 
         return render_to_response(word_entry.template, request_context)

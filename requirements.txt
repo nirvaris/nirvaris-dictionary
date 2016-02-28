@@ -1,5 +1,6 @@
 git+https://github.com/nirvaris/nirvaris-profile
 git+https://github.com/nirvaris/nirvaris-theme-default
+git+https://github.com/nirvaris/nirvaris-menu
 Django==1.9
 django-smtp-ssl==1.0
 pycrypto==2.6.1

@@ -1,7 +1,9 @@
 {% extends "theme-base.html" %}
 {% load staticfiles %}
 {% load i18n %}
+{% load theme_form_tags %}
 {% load theme_image_gallery_tags %}
+{% load theme_messages_tags %}
 
 {% block body_class %}sub-page{% endblock %}
 
@@ -9,21 +11,21 @@
 
 
 	<div class="word-entry">
-		
+
 		<div class="row">
 
 			<div class="col-md-6">
-				
+
 				<h1>{{ word_entry.word }}</h1>
-				
+
 				<p class="lead">{{ word_entry.short_description|safe }}</p>
-				
+
 				<hr/>
-				
+
 				{% if word_entry.audio_file %}
 					<div class="word-entry-audio">{{ word_entry.audio_file }}</div>
 				{% endif %}
-				
+
 				{% if word_entry.phonetics %}
 					<div class="word-entry-audio">{{ word_entry.phonetics }}</div>
 				{% endif %}
@@ -75,5 +77,16 @@
 			</div>
 		</div>
 	</div>
-
+	<b>{% trans 'Comentários:' %}</b>
+	{% for comment in word_entry.word_entry_comments.all %}
+		{% if comment.is_approved %}<p>{{ comment.content }}</p>{% endif %}
+	{% endfor %}
+	<form ng-non-bindable method="POST" >{% csrf_token %}
+		{{ messages|messages_style }}
+		{{ comment_form|form_style }}
+		<div class="form-group">
+			{# Translators: The save comment button on the word entry screen. #}
+			<input class="btn btn-primary btn-lg btn-block" type="submit" value="{% trans 'Save' %}">
+		</div>
+	</form>
 {% endblock %}
