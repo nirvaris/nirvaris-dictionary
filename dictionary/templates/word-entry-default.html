@@ -13,7 +13,6 @@
 	<div class="word-entry">
 
 		<div class="row">
-
 			<div class="col-md-6">
 
 				<h1>{{ word_entry.word }}</h1>
@@ -67,7 +66,6 @@
 				</div>
 
 			</div>
-
 			<div class="col-md-6">
 				{% if word_entry.word_content.pictures.all %}
 					{{ word_entry.word_content.pictures.all|vertical_thumbs }}
@@ -77,16 +75,25 @@
 			</div>
 		</div>
 	</div>
-	<b>{% trans 'Comentários:' %}</b>
+
+	<div class="comments">
+		<h3>{% trans 'Comentários:' %}</h3>
+		<form ng-non-bindable method="POST" >{% csrf_token %}
+			{{ messages|messages_style }}
+			{{ comment_form|form_style }}
+			<div class="form-group">
+				<label></label>
+				{# Translators: The save comment button on the word entry screen. #}
+				<input class="btn btn-primary btn-lg btn-block" type="submit" value="{% trans 'Save' %}">
+			</div>
+		</form>
+	</div>
+	
 	{% for comment in word_entry.word_entry_comments.all %}
-		{% if comment.is_approved %}<p>{{ comment.content }}</p>{% endif %}
+		{% if comment.is_approved %}
+			
+			<p>{{ comment.author }} - {{ comment.content }}</p>
+		{% endif %}
 	{% endfor %}
-	<form ng-non-bindable method="POST" >{% csrf_token %}
-		{{ messages|messages_style }}
-		{{ comment_form|form_style }}
-		<div class="form-group">
-			{# Translators: The save comment button on the word entry screen. #}
-			<input class="btn btn-primary btn-lg btn-block" type="submit" value="{% trans 'Save' %}">
-		</div>
-	</form>
+	
 {% endblock %}

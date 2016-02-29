@@ -2,6 +2,11 @@
 	margin-bottom: 0;
 }
 
+
+
+/***********************************************************/
+/* Word Entry */
+/***********************************************************/
 .search-result {
 	position: relative;
 }
@@ -31,6 +36,9 @@
 
 
 
+/***********************************************************/
+/* Alphabetical Seach */
+/***********************************************************/
 .dictionary-alphabetical-search {
     margin: 15px 0 0 0;
 }
@@ -58,6 +66,10 @@
 }
 
 
+
+/***********************************************************/
+/* Word List Page */
+/***********************************************************/
 .dictionary-word-list {
 	list-style: none;
 }
@@ -96,6 +108,10 @@
 }
 
 
+
+/***********************************************************/
+/* Word Entry */
+/***********************************************************/
 .word-entry h1 {
 	color: #055b01;
 	font-size: 40px;
@@ -119,4 +135,24 @@
 }
 .word-entry .row > div:first-child {
 	padding-right: 50px;
+}
+/* Comments */
+.comments {
+    margin-top: 70px;
+    padding-top: 50px;
+    border-top: 1px solid #EEE;
+}
+.comments h3 {
+	margin-bottom: 30px;
+}
+.comments .form-group label {
+	width: 150px;
+	float: left;
+}
+.comments .form-group input {
+	width: 300px;
+}
+.comments .form-group textarea {
+	height: 70px;
+	width: 500px;
 }
