@@ -242,6 +242,7 @@ class WordEntryView(View):
 
             comment = form.save()
             comment.author_ip = request.META['REMOTE_ADDR']
+            
             comment.save()
             form = CommentForm(initial={'word_entry_id': word_entry.id})
 
