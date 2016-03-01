@@ -140,10 +140,13 @@
 .comments {
     margin-top: 70px;
     padding-top: 50px;
-    border-top: 1px solid #EEE;
+    border-top: 2px solid #EEE;
 }
 .comments h3 {
 	margin-bottom: 30px;
+}
+.comments .comment-form {
+	margin-bottom: 70px;
 }
 .comments .form-group label {
 	width: 150px;
@@ -155,4 +158,50 @@
 .comments .form-group textarea {
 	height: 70px;
 	width: 500px;
+}
+.comments .comment-form .form-error-list {
+    margin-left: 151px;
+}
+.comments-list {
+    padding-top: 50px;
+    border-top: 1px solid #EEE;
+}
+.comments-list ul {
+	padding: 0;
+	list-style: none;
+}
+.comments-list li {
+	overflow: hidden;
+	display: block;
+	margin-bottom: 24px;
+}
+.comment-avatar {
+	float: left;
+	margin-right: 12px;
+}
+.user-avatar {
+    width: 48px;
+    height: 48px;
+	border-radius: 3px;
+}
+.comment-body {
+	font-size: 14px;
+	float: left;
+}
+.comment-body p {
+	margin-bottom: 4px;
+}
+.comment-body .comment-author {
+	color: #009933;
+}
+.comment-body .comment-date {
+	color: #a5b2b9;
+	font-size: 12px;
+}
+.comment-date-bullet {
+	font-size: 75%;
+	padding: 0 7px 0 4px;
+}
+.comment-body .comment-text {
+	color: #525252;
 }

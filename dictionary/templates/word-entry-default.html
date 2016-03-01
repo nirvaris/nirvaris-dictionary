@@ -78,22 +78,40 @@
 
 	<div class="comments">
 		<h3>{% trans 'Comentários:' %}</h3>
-		<form ng-non-bindable method="POST" >{% csrf_token %}
-			{{ messages|messages_style }}
-			{{ comment_form|form_style }}
-			<div class="form-group">
-				<label></label>
-				{# Translators: The save comment button on the word entry screen. #}
-				<input class="btn btn-primary btn-lg btn-block" type="submit" value="{% trans 'Save' %}">
-			</div>
-		</form>
+		<div class="comment-form">
+			<form ng-non-bindable method="POST" >{% csrf_token %}
+				{{ messages|messages_style }}
+				{{ comment_form|form_style }}
+				<div class="form-group">
+					<label></label>
+					{# Translators: The save comment button on the word entry screen. #}
+					<input class="btn btn-primary btn-lg btn-block" type="submit" value="{% trans 'Post Comment' %}">
+				</div>
+			</form>
+		</div>
+		<h4>{{word_entry.word_entry_comments.count}} {% trans 'Comments' %}</h4>
+		<div class="comments-list">
+			<ul>
+			{% for comment in word_entry.word_entry_comments.all %}
+				{% if comment.is_approved %}
+					<li>
+						<div class="comment-avatar">
+							<img class="user-avatar" src="{% static 'image/no-avatar.png' %}" alt="Avatar">
+						</div>
+						<div class="comment-body">
+							<p>
+								<span class="comment-author">{{ comment }}</span>
+								<span class="comment-date"><span class="comment-date-bullet">•</span>{{ comment.created }}</span>
+							</p>
+							<p class="comment-text">{{ comment.content }}</p>
+						</div>
+					</li>
+				{% endif %}
+			{% endfor %}
+			</ul>
+		</div>
 	</div>
 	
-	{% for comment in word_entry.word_entry_comments.all %}
-		{% if comment.is_approved %}
-			
-			<p>{{ comment.author }} - {{ comment.content }}</p>
-		{% endif %}
-	{% endfor %}
+	
 	
 {% endblock %}
