@@ -60,7 +60,7 @@ class CommentForm(forms.ModelForm):
         return cleaned_data
 
     def save(self, commit=True):
-        pdb.set_trace()
+        #pdb.set_trace()
         if commit:
             if self.instance.author:
                 self.instance.author.save()

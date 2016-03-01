@@ -61,6 +61,8 @@ class CSVImportException(Exception):
 def export_csv(request):
     ...
 
+def import_comments_csv(request, file_path):
+    ...
 def import_language_csv(request, file_path):
 
     is_to_commit = True

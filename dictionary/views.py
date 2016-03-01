@@ -17,7 +17,7 @@ from django.utils.encoding import smart_str
 from django.views.generic.base import View
 # Create your views here.
 
-from .csv_things import import_csv, import_tag_csv, import_language_csv, DICTIONARY_CSV_FIELDS, TAG_CSV_FIELDS, LANGUAGE_CSV_FIELDS
+from .csv_things import import_csv, import_tag_csv, import_language_csv, import_comments_csv, DICTIONARY_CSV_FIELDS, TAG_CSV_FIELDS, LANGUAGE_CSV_FIELDS
 from .forms import CommentForm, SearchForm, UploadCSVForm
 from .models import WordEntry
 
@@ -43,6 +43,39 @@ class DownloadImportLogView(View):
         response['Content-Disposition'] = 'attachment; filename=%s' % smart_str('import-log.log.txt')
 
         return response
+
+class UploadCommentsCSVView(View):
+
+    def get(self, request):
+        form = UploadCSVForm()
+        request_context = RequestContext(request,{'upload_form':form, 'mapped_fields': LANGUAGE_CSV_FIELDS})
+        return render_to_response('upload-comments-csv-form.html', request_context)
+
+    def post(self, request):
+
+        form = UploadCSVForm(request.POST, request.FILES)
+
+        if not form.is_valid():
+            request_context = RequestContext(request,{'upload_form':form, 'mapped_fields': LANGUAGE_CSV_FIELDS})
+            return render_to_response('upload-comments-csv-form.html', request_context)
+
+        f = request.FILES['file']
+        file_path = os.path.join(settings.BASE_DIR,'dictionary', 'upload') + '/' +request.user.username + '.' + f.name
+
+        if not os.path.exists(os.path.dirname(file_path)):
+            os.makedirs(os.path.dirname(file_path))
+
+        with open(file_path , 'wb+') as destination:
+            for chunk in f.chunks():
+                destination.write(chunk)
+
+        log_file_path = import_comments_csv(request, file_path)
+
+        request.session['log_file_path'] = log_file_path
+
+        form = UploadCSVForm()
+        request_context = RequestContext(request,{'upload_form':form,'log_link':'download_log', 'mapped_fields': TAG_CSV_FIELDS})
+        return render_to_response('upload-comments-csv-form.html', request_context)
 
 class UploadLanguageCSVView(View):
 
@@ -242,7 +275,7 @@ class WordEntryView(View):
 
             comment = form.save()
             comment.author_ip = request.META['REMOTE_ADDR']
-            
+
             comment.save()
             form = CommentForm(initial={'word_entry_id': word_entry.id})
 
