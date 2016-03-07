@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='comment',
             name='author_ip',
-            field=models.GenericIPAddressField(default=0),
+            field=models.GenericIPAddressField(default=127.0.0.1),
             preserve_default=False,
         ),
     ]
