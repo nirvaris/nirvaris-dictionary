@@ -81,7 +81,7 @@ def import_comments_csv(request, file_path):
                     if User.objects.filter(email=email).exists():
                         user = User.objects.get(email=email)
                     else:
-                        user = User(username=email, email=email)
+                        user = User(username=email[0:30], email=email)
                         name = row[2]
                         first_name = name.split(' ')[0].strip()
                         last_name = name.replace(first_name, '').strip()
