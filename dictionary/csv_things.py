@@ -74,7 +74,7 @@ def import_comments_csv(request, file_path):
             line = 0
             for row in csv_reader:
                 line += 1
-                try
+                try:
                     if not WordEntry.objects.filter(word=row[0]).exists():
                         continue
 
