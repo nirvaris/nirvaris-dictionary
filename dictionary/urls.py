@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 
 
-from .views import WordEntryView, SearchView, UploadCSVView, DemoSearchFormView, UploadTagCSVView, UploadLanguageCSVView, DownloadImportLogView
+from .views import WordEntryView, SearchView, UploadCSVView, DemoSearchFormView, UploadTagCSVView, UploadLanguageCSVView, DownloadImportLogView, UploadCommentsCSVView
 
 
 urlpatterns = [
@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^upload-csv$', login_required(UploadCSVView.as_view()), name='upload-csv'),
     url(r'^upload-tag-csv$', login_required(UploadTagCSVView.as_view()), name='upload-tag-csv'),
     url(r'^upload-language-csv$', login_required(UploadLanguageCSVView.as_view()), name='upload-language-csv'),
+    url(r'^upload-comments-csv$', login_required(UploadCommentsCSVView.as_view()), name='upload-comments-csv'),
     url(r'^download-log$', login_required(DownloadImportLogView.as_view()), name='download-log'),
 
     url(r'^(?P<tags>.*)$', WordEntryView.as_view(), name='word-entry'),

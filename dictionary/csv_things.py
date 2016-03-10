@@ -6,10 +6,11 @@ from datetime import datetime
 from django.conf import settings
 from django.db import transaction
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.core.mail import mail_admins
 from django.utils.translation import ugettext as _
 
-from .models import WordEntry, Tag, Language, Tag, Picture, WordContent, WordClass
+from .models import WordEntry, Tag, Language, Tag, Picture, WordContent, WordClass, WordComment
 
 DICTIONARY_CSV_FIELDS = {
     'id': 'ID',
@@ -62,7 +63,45 @@ def export_csv(request):
     ...
 
 def import_comments_csv(request, file_path):
-    ...
+
+    with open(file_path, encoding='latin-1') as csvfile:
+        csv_reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+
+        with transaction.atomic():
+            for row in csv_reader:
+                if not WordEntry.objects.filter(word=row[0]).exists():
+                    continue
+
+                word_entry = WordEntry.objects.filter(word=row[0])[0]
+
+                if User.objects.filter(email=row[3]).exists():
+                    user = User.objects.filter(email=row[3])[0]
+                else:
+                    email=row[3]
+                    if User.objects.filter(email=email).exists():
+                        user = User.objects.get(email=email)
+                    else:
+                        user = User(username=email, email=email)
+                        name = row[2]
+                        first_name = name.split(' ')[0].strip()
+                        last_name = name.replace(first_name, '').strip()
+
+                        user.first_name = first_name
+                        user.last_name = last_name
+
+                        user.save()
+                comment = WordComment(author=user, word_entry=word_entry, author_ip=row[4],content=row[6], is_approved=True)
+                comment.save()
+
+#0post_title,
+#1comment_ID,
+#2comment_author
+#3,comment_author_email
+#4,comment_author_IP
+#5,comment_date_gmt
+#6,comment_content
+#7,comment_parent
+
 def import_language_csv(request, file_path):
 
     is_to_commit = True

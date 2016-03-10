@@ -18,7 +18,7 @@ from django.views.generic.base import View
 # Create your views here.
 
 from .csv_things import import_csv, import_tag_csv, import_language_csv, import_comments_csv, DICTIONARY_CSV_FIELDS, TAG_CSV_FIELDS, LANGUAGE_CSV_FIELDS
-from .forms import CommentForm, SearchForm, UploadCSVForm
+from .forms import WordCommentForm, SearchForm, UploadCSVForm
 from .models import WordEntry
 
 NV_DICTIONARY_GALLERY_EMPTY_IMAGE = 'static/image/empty-image.jpg'
@@ -232,7 +232,7 @@ class WordEntryView(View):
                 form_initial['email'] = request.user.email
                 form_initial['name'] = request.user.get_full_name()
 
-            form = CommentForm(initial=form_initial)
+            form = WordCommentForm(initial=form_initial)
 
             meta_data_locals = [
                 {
