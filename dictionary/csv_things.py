@@ -67,7 +67,7 @@ def import_comments_csv(request, file_path):
     log_file_path = file_path + '.log'
     csv_log = open(log_file_path, 'w')
 
-    with open(file_path, encoding='latin-1') as csvfile:
+    with open(file_path) as csvfile:
         csv_reader = csv.reader(csvfile, delimiter=',', quotechar='"')
 
         with transaction.atomic():
