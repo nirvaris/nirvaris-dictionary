@@ -4,7 +4,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 
-from .models import Comment
+from .models import WordComment
 
 
 class UploadCSVForm(forms.Form):
@@ -14,7 +14,7 @@ class UploadCSVForm(forms.Form):
 class SearchForm(forms.Form):
     search_input = forms.CharField(required=True, label=_('Search'), max_length=200)
 
-class CommentForm(forms.ModelForm):
+class WordCommentForm(forms.ModelForm):
 
     name = forms.CharField(required=False, label=_('Name'), max_length=200)
     email = forms.EmailField(required=False, label=_('Email'), max_length=200)
@@ -22,14 +22,14 @@ class CommentForm(forms.ModelForm):
     author_ip = forms.GenericIPAddressField(required=False, widget=forms.HiddenInput())
 
     class Meta:
-        model = Comment
+        model = WordComment
         fields =[
             'word_entry_id' ,'name', 'email', 'content'
         ]
 
     def clean(self):
 
-        cleaned_data = super(CommentForm, self).clean()
+        cleaned_data = super(WordCommentForm, self).clean()
         name = ''
         email = ''
         try:

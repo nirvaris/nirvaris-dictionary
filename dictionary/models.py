@@ -69,7 +69,7 @@ class WordEntry(models.Model):
         return self.word + ' (url: /' + self.relative_url + ')'
 
 
-class Comment(models.Model):
+class WordComment(models.Model):
     author = models.ForeignKey(User, null=True, blank=True, related_name='word_entry_comments')
     author_ip = models.GenericIPAddressField(null=True, blank=True)
     word_entry = models.ForeignKey(WordEntry, related_name='word_entry_comments')
