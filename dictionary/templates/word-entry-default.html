@@ -64,6 +64,24 @@
 				<div class="word-entry-content">
 					{{ word_entry.word_content|safe }}
 				</div>
+				
+				
+				<div class="word-entry-social-buttons">
+					<!-- Facebook -->
+					<a href="javascript:shareWordEntry('FACEBOOK', 'http://www.dicionariotupiguarani.com.br/dicionario/ara/', 'Dicionário Tupi Guarani', 'Word Entry Name', 'http://www.dicionariotupiguarani.com.br/static/gallery/185_Abacate_1_small.jpg', 520, 350)" target="_blank">
+						<img src="{% static 'image/social-share-facebook.png' %}" alt="Share on Facebook" />
+					</a>
+				
+					<!-- Twitter -->
+					<a href="javascript:shareWordEntry('TWITTER', 'http://www.dicionariotupiguarani.com.br/dicionario/ara/', 'Dicionário Tupi Guarani', 'Word Entry Name', 'http://www.dicionariotupiguarani.com.br/static/gallery/185_Abacate_1_small.jpg', 520, 350)" target="_blank">
+						<img src="{% static 'image/social-share-twitter.png' %}" alt="Share on Twitter" />
+					</a>
+				
+					<!-- Google+ -->
+					<a href="javascript:shareWordEntry('GOOGLE', 'http://www.dicionariotupiguarani.com.br/dicionario/ara/', 'Dicionário Tupi Guarani', 'Word Entry Name', 'http://www.dicionariotupiguarani.com.br/static/gallery/185_Abacate_1_small.jpg', 520, 350)" target="_blank">
+						<img src="{% static 'image/social-share-google.png' %}" alt="Share on Google" />
+					</a>
+				</div>
 
 			</div>
 			<div class="col-md-6">
@@ -111,6 +129,6 @@
 		</div>
 	</div>
 	
-	
+	<script src="{% static 'js/dictionary.js' %}"></script>
 	
 {% endblock %}

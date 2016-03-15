@@ -136,6 +136,17 @@
 .word-entry .row > div:first-child {
 	padding-right: 50px;
 }
+/* Social buttons */
+.word-entry-social-buttons {
+	margin-top: 25px;
+}
+.word-entry-social-buttons a {
+	margin-right: 5px;
+	text-decoration: none;
+}
+.word-entry-social-buttons a:hover {
+	opacity: .5;
+}
 /* Comments */
 .comments {
     margin-top: 70px;
