@@ -264,7 +264,7 @@ class WordEntryView(View):
         else:
             word_entries = WordEntry.objects.filter(is_published=True)
 
-        request_context = RequestContext(request,{'word_entries':word_entries, 'gallery_images': NV_THEME_GALLERY_IMAGES})
+        request_context = RequestContext(request,{'word_entries':word_entries, 'gallery_images': NV_THEME_GALLERY_IMAGES, 'site_url': NV_SITE_URL})
 
         return render_to_response('word-entries-tags.html', request_context)
 
