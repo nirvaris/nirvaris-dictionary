@@ -3,6 +3,8 @@ function shareWordEntry(target, url, title, descr, image, winWidth, winHeight) {
 	var winTop = (screen.height / 2) - (winHeight / 2);
 	var winLeft = (screen.width / 2) - (winWidth / 2);
 	
+	event.preventDefault();
+	
 	switch (target) {
 		case 'FACEBOOK':
 			// "http://www.facebook.com/sharer.php?u=http://www.dicionariotupiguarani.com.br/dicionario/ara/"
