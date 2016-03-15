@@ -34,6 +34,12 @@ if hasattr(settings, 'NV_THEME_GALLERY_IMAGES'):
     if settings.NV_THEME_GALLERY_IMAGES:
         NV_THEME_GALLERY_IMAGES = settings.NV_THEME_GALLERY_IMAGES
 
+NV_SITE_URL = 'http://localhost:8080/'
+
+if hasattr(settings, 'NV_SITE_URL'):
+    if settings.NV_SITE_URL:
+        NV_SITE_URL = settings.NV_SITE_URL
+
 class DownloadImportLogView(View):
 
     def get(self, request):
@@ -279,6 +285,6 @@ class WordEntryView(View):
             comment.save()
             form = CommentForm(initial={'word_entry_id': word_entry.id})
 
-        request_context = RequestContext(request,{'word_entry':word_entry,'comment_form':form, 'empty_image': NV_DICTIONARY_GALLERY_EMPTY_IMAGE})
+        request_context = RequestContext(request,{'word_entry':word_entry,'comment_form':form, 'empty_image': NV_DICTIONARY_GALLERY_EMPTY_IMAGE, 'site_url': NV_SITE_URL})
 
         return render_to_response(word_entry.template, request_context)
