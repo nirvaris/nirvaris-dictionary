@@ -40,6 +40,14 @@ if hasattr(settings, 'NV_SITE_URL'):
     if settings.NV_SITE_URL:
         NV_SITE_URL = settings.NV_SITE_URL
 
+NV_DICTIONARY_URL = 'dictionary'
+
+if hasattr(settings, 'NV_DICTIONARY_URL'):
+    if settings.NV_DICTIONARY_URL:
+        NV_DICTIONARY_URL = settings.NV_DICTIONARY_URL
+
+
+
 class DownloadImportLogView(View):
 
     def get(self, request):
@@ -251,7 +259,7 @@ class WordEntryView(View):
                 },
             ]
 
-            request_context = RequestContext(request,{'word_entry':word_entry, 'title': word_entry.word,'comment_form':form, 'meta_data_locals': meta_data_locals , 'empty_image': NV_DICTIONARY_GALLERY_EMPTY_IMAGE, 'site_url': NV_SITE_URL})
+            request_context = RequestContext(request,{'word_entry':word_entry, 'title': word_entry.word,'comment_form':form, 'meta_data_locals': meta_data_locals , 'empty_image': NV_DICTIONARY_GALLERY_EMPTY_IMAGE, 'site_url': NV_SITE_URL, 'dictionary_url': NV_DICTIONARY_URL})
 
             return render_to_response(word_entry.template, request_context)
 
@@ -264,7 +272,7 @@ class WordEntryView(View):
         else:
             word_entries = WordEntry.objects.filter(is_published=True)
 
-        request_context = RequestContext(request,{'word_entries':word_entries, 'gallery_images': NV_THEME_GALLERY_IMAGES, 'site_url': NV_SITE_URL})
+        request_context = RequestContext(request,{'word_entries':word_entries, 'gallery_images': NV_THEME_GALLERY_IMAGES, 'site_url': NV_SITE_URL, 'dictionary_url': NV_DICTIONARY_URL})
 
         return render_to_response('word-entries-tags.html', request_context)
 
@@ -285,6 +293,6 @@ class WordEntryView(View):
             comment.save()
             form = CommentForm(initial={'word_entry_id': word_entry.id})
 
-        request_context = RequestContext(request,{'word_entry':word_entry,'comment_form':form, 'empty_image': NV_DICTIONARY_GALLERY_EMPTY_IMAGE, 'site_url': NV_SITE_URL})
+        request_context = RequestContext(request,{'word_entry':word_entry,'comment_form':form, 'empty_image': NV_DICTIONARY_GALLERY_EMPTY_IMAGE, 'site_url': NV_SITE_URL, 'dictionary_url': NV_DICTIONARY_URL})
 
         return render_to_response(word_entry.template, request_context)
