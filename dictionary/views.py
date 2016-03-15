@@ -251,7 +251,7 @@ class WordEntryView(View):
                 },
             ]
 
-            request_context = RequestContext(request,{'word_entry':word_entry, 'title': word_entry.word,'comment_form':form, 'meta_data_locals': meta_data_locals , 'empty_image': NV_DICTIONARY_GALLERY_EMPTY_IMAGE})
+            request_context = RequestContext(request,{'word_entry':word_entry, 'title': word_entry.word,'comment_form':form, 'meta_data_locals': meta_data_locals , 'empty_image': NV_DICTIONARY_GALLERY_EMPTY_IMAGE, 'site_url': NV_SITE_URL})
 
             return render_to_response(word_entry.template, request_context)
 
