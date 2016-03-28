@@ -12,9 +12,14 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+class LanguageType(models.Model):
+    name = models.CharField(max_length=70, unique=True)
+
 class Language(models.Model):
     name = models.CharField(max_length=70, unique=True)
-    location = models.CharField(max_length=70)
+    parent = models.ForeignKey('Language', related_name='language_parent', null=True)
+    language_type = models.ForeignKey(LanguageType, related_name='languages', null=True, blank=True)
+    location = models.CharField(max_length=70, null=True, blank=True)
     is_tribal = models.BooleanField(default=True)
     def __str__(self):
         return self.name
