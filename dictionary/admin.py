@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import WordEntry, Tag, WordComment, Language, Picture, WordClass, WordContent
+from .models import WordEntry, Tag, WordComment, Language, Picture, WordClass, WordContent, LanguageType, WordContentReference
 
 def make_published(modeladmin, request, queryset):
     queryset.update(is_published=True)
@@ -25,8 +25,8 @@ class TagAdmin(admin.ModelAdmin):
 admin.site.register(Tag,TagAdmin)
 
 class WordCommentAdmin(admin.ModelAdmin):
-    list_filter = ('word_entry','author','content','is_approved','created')
-    list_display = ('word_entry','author','content','is_approved')
+    list_filter = ('is_approved', 'word_entry', 'author', 'content', 'created')
+    list_display = ('word_entry', 'author', 'content', 'is_approved', 'created')
     list_editable = ('is_approved',)
     search_fields = ['content']
 
@@ -46,3 +46,7 @@ admin.site.register(Picture,PictureAdmin)
 admin.site.register(Language)
 
 admin.site.register(WordClass)
+
+admin.site.register(LanguageType)
+admin.site.register(WordContentReference)
+

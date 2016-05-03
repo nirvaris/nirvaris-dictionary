@@ -3,6 +3,10 @@ from django.db import models
 
 # Create your models here.
 
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    return 'gallery/{0}/{1}'.format(instance.url, filename)
+
 class Tag(models.Model):
     name = models.CharField(max_length=200, unique=True)
     display = models.CharField(max_length=200, unique=False)
@@ -14,12 +18,16 @@ class Tag(models.Model):
 
 class LanguageType(models.Model):
     name = models.CharField(max_length=70, unique=True)
+    def __str__(self):
+        return self.name
 
 class Language(models.Model):
     name = models.CharField(max_length=70, unique=True)
-    parent = models.ForeignKey('Language', related_name='language_parent', null=True)
+    parent = models.ForeignKey('Language', related_name='language_parent', null=True, blank=True)
     language_type = models.ForeignKey(LanguageType, related_name='languages', null=True, blank=True)
-    location = models.CharField(max_length=70, null=True, blank=True)
+    location_name = models.CharField(max_length=70, null=True, blank=True)
+    location_latitude = models.PositiveSmallIntegerField(default=0)
+    location_longitude = models.PositiveSmallIntegerField(default=0)
     is_tribal = models.BooleanField(default=True)
     def __str__(self):
         return self.name
@@ -31,8 +39,16 @@ class WordClass(models.Model):
     def __str__(self):
         return self.name
 
+class WordContentReference(models.Model):
+    reference = models.CharField(max_length=1024, unique=True)
+    created = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+    def __str__(self):
+        return self.content
+
 class WordContent(models.Model):
-    author = models.ForeignKey(User, related_name='word_entries_content')
+    author = models.ForeignKey(User, related_name='word_contents')
+    references = models.ManyToManyField(WordContentReference, related_name='word_contents')
     content = models.TextField(blank=False)
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
@@ -41,7 +57,7 @@ class WordContent(models.Model):
 
 class Picture(models.Model):
     description = models.CharField(max_length=155)
-    file_name = models.CharField(max_length=255)
+    image = models.ImageField(upload_to=user_directory_path, null=True, max_length=1024)
     display_order = models.PositiveSmallIntegerField(default=0)
     word_content = models.ForeignKey(WordContent, related_name='pictures')
     def __str__(self):

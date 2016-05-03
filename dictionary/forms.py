@@ -10,7 +10,6 @@ from .models import WordComment
 class UploadCSVForm(forms.Form):
     file = forms.FileField()
 
-
 class SearchForm(forms.Form):
     search_input = forms.CharField(required=True, label=_('Search'), max_length=200)
 

@@ -279,19 +279,19 @@ class WordEntryView(View):
     def post(self, request, tags):
 
         #pdb.set_trace()
-        form = CommentForm(request.POST)
+        form = WordCommentForm(request.POST)
         form_valid = form.is_valid()
         cleaned_data = form.clean()
 
         word_entry = WordEntry.objects.get(id=cleaned_data['word_entry_id'])
-        #pdb.set_trace()
+        pdb.set_trace()
         if form_valid:
 
             comment = form.save()
             comment.author_ip = request.META['REMOTE_ADDR']
 
             comment.save()
-            form = CommentForm(initial={'word_entry_id': word_entry.id})
+            form = WordCommentForm(initial={'word_entry_id': word_entry.id})
 
         request_context = RequestContext(request,{'word_entry':word_entry,'comment_form':form, 'empty_image': NV_DICTIONARY_GALLERY_EMPTY_IMAGE, 'site_url': NV_SITE_URL, 'dictionary_url': NV_DICTIONARY_URL})
 
