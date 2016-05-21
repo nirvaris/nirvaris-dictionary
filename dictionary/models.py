@@ -57,11 +57,13 @@ class WordContent(models.Model):
 
 class Picture(models.Model):
     description = models.CharField(max_length=155)
-    image = models.ImageField(upload_to=user_directory_path, null=True, max_length=1024)
+    full = models.ImageField(upload_to=user_directory_path, null=True, max_length=1024)
+    small = models.ImageField(upload_to=user_directory_path, null=True, max_length=1024)
+    tinny = models.ImageField(upload_to=user_directory_path, null=True, max_length=1024)
     display_order = models.PositiveSmallIntegerField(default=0)
     word_content = models.ForeignKey(WordContent, related_name='pictures')
     def __str__(self):
-        return self.description + ' - ' + self.file_name
+        return self.description
 
 class WordEntry(models.Model):
     author = models.ForeignKey(User, related_name='word_entries')
@@ -82,8 +84,9 @@ class WordEntry(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     def thumb(self):
-        if self.word_content.pictures.order_by('display_order').first():
-            return self.word_content.pictures.order_by('display_order').first().file_name.replace('.', '_tinny.')
+        picture = self.word_content.pictures.order_by('display_order').first()
+        if picture and picture.tinny:
+            return tinny.url
         return 'no_image_tinny.png'
 
     def __str__(self):

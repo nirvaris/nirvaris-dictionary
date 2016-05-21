@@ -28,12 +28,6 @@ if hasattr(settings, 'NV_THEME_GALLERY_EMPTY_IMAGE'):
         NV_DICTIONARY_GALLERY_EMPTY_IMAGE = settings.NV_THEME_GALLERY_EMPTY_IMAGE
 
 
-NV_THEME_GALLERY_IMAGES = 'static/gallery/'
-
-if hasattr(settings, 'NV_THEME_GALLERY_IMAGES'):
-    if settings.NV_THEME_GALLERY_IMAGES:
-        NV_THEME_GALLERY_IMAGES = settings.NV_THEME_GALLERY_IMAGES
-
 NV_SITE_URL = 'http://localhost:8080/'
 
 if hasattr(settings, 'NV_SITE_URL'):
@@ -272,7 +266,7 @@ class WordEntryView(View):
         else:
             word_entries = WordEntry.objects.filter(is_published=True)
 
-        request_context = RequestContext(request,{'word_entries':word_entries, 'gallery_images': NV_THEME_GALLERY_IMAGES, 'site_url': NV_SITE_URL, 'dictionary_url': NV_DICTIONARY_URL})
+        request_context = RequestContext(request,{'word_entries':word_entries, 'site_url': NV_SITE_URL, 'dictionary_url': NV_DICTIONARY_URL})
 
         return render_to_response('word-entries-tags.html', request_context)
 
