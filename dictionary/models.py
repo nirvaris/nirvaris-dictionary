@@ -87,7 +87,7 @@ class WordEntry(models.Model):
     def thumb(self):
         picture = self.word_content.pictures.order_by('display_order').first()
         if picture and picture.tinny:
-            return picture.url
+            return picture.tinny.url
         return 'no_image_tinny.png'
 
     def __str__(self):
