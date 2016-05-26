@@ -88,7 +88,7 @@ class WordEntry(models.Model):
         picture = self.word_content.pictures.order_by('display_order').first()
         if picture and picture.tinny:
             return picture.tinny.url
-        return '/static/images/no_image_tinny.png'
+        return '/static/image/no_image_tinny.png'
 
     def __str__(self):
         return self.word + ' (url: /' + self.relative_url + ')'
