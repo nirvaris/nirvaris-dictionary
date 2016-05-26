@@ -5,8 +5,7 @@ from django.db import models
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return 'gallery/{0}'.format(filename)
-    #return 'gallery/{0}/{1}'.format(instance.url, filename)
+    return 'gallery/content_{0}/{1}'.format(instance.id, filename)
 
 class Tag(models.Model):
     name = models.CharField(max_length=200, unique=True)
