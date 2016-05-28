@@ -10,7 +10,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='nirvaris-dictionary',
-    version='1.9.4',
+    version='1.9.5',
     packages=['dictionary'],
     include_package_data=True,
     license='MIT License',  # example license

@@ -84,9 +84,10 @@ class WordEntry(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     def thumb(self):
-        picture = self.word_content.pictures.order_by('display_order').first()
-        if picture and picture.tinny:
-            return picture.tinny.url
+        if self.word_content:
+            picture = self.word_content.pictures.order_by('display_order').first()
+            if picture and picture.tinny:
+                return picture.tinny.url
         return '/static/image/no_image_tinny.png'
 
     def __str__(self):
