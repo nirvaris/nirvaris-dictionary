@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -88,7 +89,7 @@ class WordEntry(models.Model):
             picture = self.word_content.pictures.order_by('display_order').first()
             if picture and picture.tinny:
                 return picture.tinny.url
-        return '/static/image/no_image_tinny.png'
+        return  settings.STATIC_URL + 'image/no_image_tinny.png'
 
     def __str__(self):
         return self.word + ' (url: /' + self.relative_url + ')'
