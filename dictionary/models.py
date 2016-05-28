@@ -22,10 +22,10 @@ class LanguageType(models.Model):
         return self.name
 
 class Language(models.Model):
-    name = models.CharField(max_length=70, unique=True)
+    name = models.CharField(max_length=1024, unique=True)
     parent = models.ForeignKey('Language', related_name='language_parent', null=True, blank=True)
     language_type = models.ForeignKey(LanguageType, related_name='languages', null=True, blank=True)
-    location_name = models.CharField(max_length=70, null=True, blank=True)
+    location_name = models.CharField(max_length=1024, null=True, blank=True)
     location_latitude = models.PositiveSmallIntegerField(default=0)
     location_longitude = models.PositiveSmallIntegerField(default=0)
     is_tribal = models.BooleanField(default=True)
@@ -40,7 +40,7 @@ class WordClass(models.Model):
         return self.name
 
 class WordContentReference(models.Model):
-    reference = models.CharField(max_length=1024, unique=True)
+    reference = models.CharField(max_length=2048, unique=True)
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
     def __str__(self):
@@ -56,7 +56,7 @@ class WordContent(models.Model):
         return self.content
 
 class Picture(models.Model):
-    description = models.CharField(max_length=155)
+    description = models.CharField(max_length=1024)
     full = models.ImageField(upload_to=user_directory_path, null=True, max_length=1024)
     small = models.ImageField(upload_to=user_directory_path, null=True, max_length=1024)
     tinny = models.ImageField(upload_to=user_directory_path, null=True, max_length=1024)
@@ -69,7 +69,7 @@ class WordEntry(models.Model):
     author = models.ForeignKey(User, related_name='word_entries')
     relative_url = models.CharField(max_length=155, unique=True, null=False)
     word = models.CharField(max_length=100, null=False)
-    short_description = models.CharField(max_length=255, null=False)
+    short_description = models.CharField(max_length=1024, null=False)
     languages = models.ManyToManyField(Language, related_name='word_entries')
     word_classes = models.ManyToManyField(WordClass, related_name='word_entries')
     audio_file = models.CharField(max_length=255, null=True, blank=True)
