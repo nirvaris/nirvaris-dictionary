@@ -45,8 +45,8 @@ class WordContentReference(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
     def __str__(self):
-        return self.content
-
+        return self.reference
+        
 class WordContent(models.Model):
     author = models.ForeignKey(User, related_name='word_contents')
     references = models.ManyToManyField(WordContentReference, related_name='word_contents')
