@@ -7,8 +7,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.db.models import Q
 from django.http import HttpResponse
-from django.shortcuts import render, render_to_response
-from django.template import RequestContext
+from django.shortcuts import render
 
 from django.views.generic import TemplateView
 
@@ -56,16 +55,16 @@ class UploadCommentsCSVView(View):
 
     def get(self, request):
         form = UploadCSVForm()
-        request_context = RequestContext(request,{'upload_form':form, 'mapped_fields': LANGUAGE_CSV_FIELDS})
-        return render_to_response('upload-comments-csv-form.html', request_context)
+        data_context = {'upload_form':form, 'mapped_fields': LANGUAGE_CSV_FIELDS}
+        return render(request,'upload-comments-csv-form.html', data_context)
 
     def post(self, request):
 
         form = UploadCSVForm(request.POST, request.FILES)
 
         if not form.is_valid():
-            request_context = RequestContext(request,{'upload_form':form, 'mapped_fields': LANGUAGE_CSV_FIELDS})
-            return render_to_response('upload-comments-csv-form.html', request_context)
+            data_context = {'upload_form':form, 'mapped_fields': LANGUAGE_CSV_FIELDS}
+            return render(request,'upload-comments-csv-form.html', data_context)
 
         f = request.FILES['file']
         file_path = os.path.join(settings.BASE_DIR,'dictionary', 'upload') + '/' +request.user.username + '.' + f.name
@@ -82,23 +81,23 @@ class UploadCommentsCSVView(View):
         request.session['log_file_path'] = log_file_path
 
         form = UploadCSVForm()
-        request_context = RequestContext(request,{'upload_form':form,'log_link':'download_log', 'mapped_fields': TAG_CSV_FIELDS})
-        return render_to_response('upload-comments-csv-form.html', request_context)
+        data_context = {'upload_form':form,'log_link':'download_log', 'mapped_fields': TAG_CSV_FIELDS}
+        return render(request,'upload-comments-csv-form.html', data_context)
 
 class UploadLanguageCSVView(View):
 
     def get(self, request):
         form = UploadCSVForm()
-        request_context = RequestContext(request,{'upload_form':form, 'mapped_fields': LANGUAGE_CSV_FIELDS})
-        return render_to_response('upload-language-csv-form.html', request_context)
+        data_context = {'upload_form':form, 'mapped_fields': LANGUAGE_CSV_FIELDS}
+        return render(request,'upload-language-csv-form.html', data_context)
 
     def post(self, request):
 
         form = UploadCSVForm(request.POST, request.FILES)
 
         if not form.is_valid():
-            request_context = RequestContext(request,{'upload_form':form, 'mapped_fields': LANGUAGE_CSV_FIELDS})
-            return render_to_response('upload-language-csv-form.html', request_context)
+            data_context = {'upload_form':form, 'mapped_fields': LANGUAGE_CSV_FIELDS}
+            return render(request,'upload-language-csv-form.html', data_context)
 
         f = request.FILES['file']
         file_path = os.path.join(settings.BASE_DIR,'dictionary', 'upload') + '/' +request.user.username + '.' + f.name
@@ -115,23 +114,23 @@ class UploadLanguageCSVView(View):
         request.session['log_file_path'] = log_file_path
 
         form = UploadCSVForm()
-        request_context = RequestContext(request,{'upload_form':form,'log_link':'download_log', 'mapped_fields': TAG_CSV_FIELDS})
-        return render_to_response('upload-language-csv-form.html', request_context)
+        data_context = {'upload_form':form,'log_link':'download_log', 'mapped_fields': TAG_CSV_FIELDS}
+        return render(request,'upload-language-csv-form.html', data_context)
 
 class UploadTagCSVView(View):
 
     def get(self, request):
         form = UploadCSVForm()
-        request_context = RequestContext(request,{'upload_form':form, 'mapped_fields': TAG_CSV_FIELDS})
-        return render_to_response('upload-tag-csv-form.html', request_context)
+        data_context = {'upload_form':form, 'mapped_fields': TAG_CSV_FIELDS}
+        return render(request,'upload-tag-csv-form.html', data_context)
 
     def post(self, request):
 
         form = UploadCSVForm(request.POST, request.FILES)
 
         if not form.is_valid():
-            request_context = RequestContext(request,{'upload_form':form, 'mapped_fields': TAG_CSV_FIELDS})
-            return render_to_response('upload-tag-csv-form.html', request_context)
+            data_context = {'upload_form':form, 'mapped_fields': TAG_CSV_FIELDS}
+            return render(request,'upload-tag-csv-form.html', data_context)
 
         f = request.FILES['file']
         file_path = os.path.join(settings.BASE_DIR,'dictionary', 'upload') + '/' +request.user.username + '.' + f.name
@@ -148,24 +147,24 @@ class UploadTagCSVView(View):
         request.session['log_file_path'] = log_file_path
 
         form = UploadCSVForm()
-        request_context = RequestContext(request,{'upload_form':form,'log_link':'download_log', 'mapped_fields': TAG_CSV_FIELDS})
-        return render_to_response('upload-tag-csv-form.html', request_context)
+        data_context = {'upload_form':form,'log_link':'download_log', 'mapped_fields': TAG_CSV_FIELDS}
+        return render(request,'upload-tag-csv-form.html', data_context)
 
 class UploadCSVView(View):
 
     def get(self, request):
         print('upload-view')
         form = UploadCSVForm()
-        request_context = RequestContext(request,{'upload_form':form, 'mapped_fields': DICTIONARY_CSV_FIELDS})
-        return render_to_response('upload-csv-form.html', request_context)
+        data_context = {'upload_form':form, 'mapped_fields': DICTIONARY_CSV_FIELDS}
+        return render(request,'upload-csv-form.html', data_context)
 
     def post(self, request):
 
         form = UploadCSVForm(request.POST, request.FILES)
 
         if not form.is_valid():
-            request_context = RequestContext(request,{'upload_form':form, 'mapped_fields': DICTIONARY_CSV_FIELDS})
-            return render_to_response('upload-csv-form.html', request_context)
+            data_context = {'upload_form':form, 'mapped_fields': DICTIONARY_CSV_FIELDS}
+            return render(request,'upload-csv-form.html', data_context)
 
         f = request.FILES['file']
         file_path = os.path.join(settings.BASE_DIR,'dictionary', 'upload') + '/' +request.user.username + '.' + f.name
@@ -185,8 +184,8 @@ class UploadCSVView(View):
         request.session['log_file_path'] = 'log_file_path'
 
         form = UploadCSVForm()
-        request_context = RequestContext(request,{'upload_form':form,'log_link':'download_log', 'mapped_fields': DICTIONARY_CSV_FIELDS})
-        return render_to_response('upload-csv-form.html', request_context)
+        data_context = {'upload_form':form,'log_link':'download_log', 'mapped_fields': DICTIONARY_CSV_FIELDS}
+        return render(request,'upload-csv-form.html', data_context)
 
 
 class DemoSearchFormView(TemplateView):
@@ -197,7 +196,7 @@ class SearchView(View):
     def get(self, request):
 
         request_context = RequestContext(request)
-        return render_to_response('search-form-get.html', request_context)
+        return render(request,'search-form-get.html', data_context)
 
     def post(self, request):
         #pdb.set_trace()
@@ -219,8 +218,8 @@ class SearchView(View):
             #pdb.set_trace()
             word_entries = WordEntry.objects.filter(is_published=True).filter(q_obj)
 
-        request_context = RequestContext(request,{'word_entries':word_entries})
-        return render_to_response('search-result.html', request_context)
+        data_context = {'word_entries':word_entries}
+        return render(request,'search-result.html', data_context)
 
 
 class WordEntryView(View):
@@ -253,9 +252,9 @@ class WordEntryView(View):
                 },
             ]
 
-            request_context = RequestContext(request,{'word_entry':word_entry, 'title': word_entry.word,'comment_form':form, 'meta_data_locals': meta_data_locals , 'empty_image': NV_DICTIONARY_GALLERY_EMPTY_IMAGE, 'site_url': NV_SITE_URL, 'dictionary_url': NV_DICTIONARY_URL})
+            data_context = {'word_entry':word_entry, 'title': word_entry.word,'comment_form':form, 'meta_data_locals': meta_data_locals , 'empty_image': NV_DICTIONARY_GALLERY_EMPTY_IMAGE, 'site_url': NV_SITE_URL, 'dictionary_url': NV_DICTIONARY_URL}
 
-            return render_to_response(word_entry.template, request_context)
+            return render(request,word_entry.template, data_context)
 
         #pdb.set_trace()
 
@@ -266,9 +265,9 @@ class WordEntryView(View):
         else:
             word_entries = WordEntry.objects.filter(is_published=True)
 
-        request_context = RequestContext(request,{'word_entries':word_entries, 'site_url': NV_SITE_URL, 'dictionary_url': NV_DICTIONARY_URL})
+        data_context = {'word_entries':word_entries, 'site_url': NV_SITE_URL, 'dictionary_url': NV_DICTIONARY_URL}
 
-        return render_to_response('word-entries-tags.html', request_context)
+        return render(request,'word-entries-tags.html', data_context)
 
     def post(self, request, tags):
 
@@ -287,6 +286,6 @@ class WordEntryView(View):
             comment.save()
             form = WordCommentForm(initial={'word_entry_id': word_entry.id})
 
-        request_context = RequestContext(request,{'word_entry':word_entry,'comment_form':form, 'empty_image': NV_DICTIONARY_GALLERY_EMPTY_IMAGE, 'site_url': NV_SITE_URL, 'dictionary_url': NV_DICTIONARY_URL})
+        data_context = {'word_entry':word_entry,'comment_form':form, 'empty_image': NV_DICTIONARY_GALLERY_EMPTY_IMAGE, 'site_url': NV_SITE_URL, 'dictionary_url': NV_DICTIONARY_URL}
 
-        return render_to_response(word_entry.template, request_context)
+        return render(word_entry.template, data_context)
